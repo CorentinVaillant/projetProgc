@@ -14,3 +14,7 @@ typedef struct sIdentite * tIdentite;
 
 //fonctions
 extern tIdentite IdentiteCreer(int Id, char *Nom, char *Prenom, char Sexe, char DateNais[]);
+char *IdentiteNom(tIdentite Identite);
+char *IdentitePrenom(tIdentite Identite);
+char IdentiteSexe(tIdentite Identite);
+char *IdentiteDateNaissance(tIdentite Identite);

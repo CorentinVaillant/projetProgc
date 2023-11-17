@@ -1,0 +1,38 @@
+# Compileur
+CC = gcc
+# Flags compileur 
+CCFLAGS = -Wall 
+
+# Dossiers
+SRCDIR = src1
+FICHIERCOMPIL = compil
+
+# Fichiers compile
+SOURCES = $(SRCDIR)/test1.c $(SRCDIR)/identite.c
+# Fichier objet
+OBJECTS = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SOURCES))
+# Nom executable
+EXECUTABLE = $(FICHIERCOMPIL)/main.exe
+
+
+all: $(EXECUTABLE)
+
+
+run : $(EXECUTABLE)
+	@echo run $(EXECUTABLE)
+	./$(EXECUTABLE)
+
+
+# Rule for linking object files and creating the executable
+$(EXECUTABLE): $(OBJECTS)
+	@mkdir -p $(FICHIERCOMPIL)
+	$(CC) $(CCFLAGS) $^ -o $@
+
+# Rule for compiling source files into object files
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(BUILDDIR)
+	$(CC) $(CCFLAGS) -c $< -o $@
+
+# Rule to clean the build
+clear:
+	@rm -rf $(BUILDDIR) $(FICHIERCOMPIL)
