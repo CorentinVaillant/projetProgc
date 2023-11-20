@@ -1,14 +1,14 @@
 # Compileur
 CC = gcc
 # Flags compileur 
-CCFLAGS = -Wall 
+CCFLAGS = -Wall #-fsanitize=address
 
 # Dossiers
 SRCDIR = src1
 FICHIERCOMPIL = compil
 
 # Fichiers compile
-SOURCES = $(SRCDIR)/test1.c $(SRCDIR)/identite.c
+SOURCES = $(SRCDIR)/testidentite.c $(SRCDIR)/identite.c
 # Fichier objet
 OBJECTS = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SOURCES))
 # Nom executable
@@ -20,7 +20,7 @@ all: $(EXECUTABLE)
 
 run : $(EXECUTABLE)
 	@echo run $(EXECUTABLE)
-	./$(EXECUTABLE)
+	@./$(EXECUTABLE)
 
 
 # Rule for linking object files and creating the executable
