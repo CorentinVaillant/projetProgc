@@ -125,6 +125,12 @@ void IdentiteLiberer(tIdentite Identite){
     free(Identite->Prenom);
 }
 //lis le contenue d'un fichier pour les associe avec une variable tIdentite
+/*
+
+retourne NULL: erreur dans les conditions !
+
+
+*/
 tIdentite IdentiteLiref(FILE *f){
     int Identifiant ; 
     char Nom[LONGUEURMOTMAX +1],Prenom[LONGUEURMOTMAX +1], DateNaissance [LG_DATE +1];
