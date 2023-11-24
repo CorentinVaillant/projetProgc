@@ -4,15 +4,15 @@ CC = gcc
 CCFLAGS = -Wall -fsanitize=address
 
 # Dossiers
-SRCDIR = src1
+SRCDIR = src2
 FICHIERCOMPIL = compil
 
 # Fichiers compile
-SOURCES = $(SRCDIR)/testidentite.c $(SRCDIR)/identite.c
+SOURCES = $(SRCDIR)/testgenea.c $(SRCDIR)/genea.c
 # Fichier objet
-OBJECTS = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SOURCES))
+OBJECTS = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SOURCES))
 # Nom executable
-EXECUTABLE = $(FICHIERCOMPIL)/testidentite
+EXECUTABLE = $(FICHIERCOMPIL)/testgenea
 
 
 all: $(EXECUTABLE)

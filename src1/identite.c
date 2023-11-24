@@ -136,40 +136,44 @@ tIdentite IdentiteLiref(FILE *f){
     char Nom[LONGUEURMOTMAX +1],Prenom[LONGUEURMOTMAX +1], DateNaissance [LG_DATE +1];
     char Sexe;
 
+
     if(!fscanf(f,"%d",&Identifiant))
         return NULL;
-    
+
     while (fgetc(f) == (int)' '); //passe tout les espace
-
-
+    //fseek(f,0,SEEK_CUR);
+    
     if(!fgets(Nom,LONGUEURMOTMAX+1,f)) //Nom<-L2 + vérification de ligne non vide/feof
         return NULL;
-
+    fseek(f,-1,SEEK_CUR);
     if(fgetc(f)!='\n') //vérification du nombre de caractères max par ligne sur L2
         return NULL;
-    fseek(f,-1,SEEK_CUR);
+    //fseek(f,-1,SEEK_CUR); 
+    
 
     if(!fgets(Prenom,LONGUEURMOTMAX+1,f))//Prenom<-L3 + vérification de ligne non vide/feof
         return NULL;
-
-    if(fgetc(f)!='\n') //vérification du nombre de caractères max par ligne sur L3
-        return NULL;
     fseek(f,-1,SEEK_CUR);
 
+    if(fgetc(f)!='\n') //vérification du nombre de caractères max par ligne sur L3
+        return NULL;//error here
+    //fseek(f,-1,SEEK_CUR);
+    
+    
     Sexe = (char) fgetc(f);
     if(!Sexe)
         return NULL;
-
+    
+    
     while (fgetc(f) == (int)' '); //passe tout les espace
-
-
+    
+    //fseek(f,-1,SEEK_CUR);
     if(!fgets(DateNaissance,LG_DATE+1,f))
         return NULL;
 
-    
-
     raccourcirStr(Nom);
     raccourcirStr(Prenom);
+    
     
     return IdentiteCreer(Identifiant,Nom,Prenom,Sexe,DateNaissance);
 }

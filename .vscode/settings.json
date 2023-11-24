@@ -1,3 +1,6 @@
 {
-    "makefile.compileCommandsPath": "make -f Makefile1"
+    "makefile.compileCommandsPath": "make -f Makefile1",
+    "files.associations": {
+        "stdio.h": "c"
+    }
 }

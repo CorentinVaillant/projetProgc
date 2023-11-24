@@ -8,7 +8,7 @@ void testIdfile(char Str[]){
     if(!f) perror("could not open file !");
     IdTest = IdentiteLiref(f);
     if(!IdTest){
-        fprintf(stderr,"IdTest NULL !\n");
+        printf("\x1b[31m IdTest NULL !\n\x1b[0m");
         return ;
     }
     IdentiteAfficher(IdTest);
@@ -35,11 +35,11 @@ int main(void){
     testIdfile("./IDs/spacePersonne.ind");
     printf("\tOK!\n");
 
-    printf("test personne NULL (lignes manquantes):\n");
+    printf("test personne \x1b[31m NULL \x1b[0m (lignes manquantes):\n");
     testIdfile("./IDs/missingNULLPersonne.ind");
     printf("\tOK!\n");
 
-    printf("test personne NULL (trop de caractères):\n");
+    printf("test personne \x1b[31m NULL \x1b[0m (trop de caractères):\n");
     testIdfile("./IDs/tooMuchNULLPersonne.ind");
     printf("\tOK!\n");
     return 0;
