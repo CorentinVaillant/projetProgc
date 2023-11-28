@@ -1,5 +1,5 @@
 #include "genea.h"
-#include "src1/identite.h"
+#include "../src1/identite.h"
 #include <stdlib.h>
 
 

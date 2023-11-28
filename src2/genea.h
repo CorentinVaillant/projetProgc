@@ -1,7 +1,7 @@
 #ifndef GENEA_H
 #define GENEA_H
 
-#include "src1/identite.h"
+#include "../src1/identite.h"
 
 // Arbre généalogique
 struct sArbre{
