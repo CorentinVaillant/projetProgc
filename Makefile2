@@ -9,13 +9,15 @@ FICHIERSRC2 = src2
 FICHIERCOMPIL = compil
 
 # Fichiers compile
-SOURCES1 = $(patsubst %.c,$(FICHIERSRC1)/%.c,identite.c)
-SOURCES2 = $(patsubst %.c,$(FICHIERSRC2)/%.c,testgenea.c genea.c)
+SOURCES1 = identite.c
+SOURCES2 =testgenea.c genea.c
+
+SOURCES = $(patsubst %.c,$(FICHIERSRC1)/%.c,identite.c) $(patsubst %.c,$(FICHIERSRC2)/%.c,testgenea.c genea.c)
 
 # Fichier objet
-OBJECTS = $(patsubst $(FICHIERSRC)/%.c,$(FICHIERCOMPIL)/%.o,$(SOURCES1) $(SOURCES2))
+OBJECTS = $(patsubst %.c,$(FICHIERCOMPIL)/%.o,$(SOURCES1) $(SOURCES2))
 # Nom executable
-EXECUTABLE = $(FICHIERCOMPIL)/testgenea
+EXECUTABLE = $(FICHIERCOMPIL)/testgenea.out
 
 
 all: $(EXECUTABLE)
@@ -29,13 +31,22 @@ run : $(EXECUTABLE)
 # création des executables
 $(EXECUTABLE): $(OBJECTS)
 	@mkdir -p $(FICHIERCOMPIL)
-	$(CC) $(CCFLAGS) $^ -o $@
+	@echo $(OBJECTS)
+	$(CC) $(CCFLAGS) $(OBJECTS) -o $@
+	# $(CC) $(CCFLAGS) $^ -o $@
 
 # compilation des objets
-$(FICHIERCOMPIL)/%.o: $(FICHIERSRC)/%.c
+$(FICHIERCOMPIL)/%.o: $(FICHIERSRC1)/%.c
 	@mkdir -p $(FICHIERCOMPIL)
 	$(CC) $(CCFLAGS) -c $< -o $@
 
+$(FICHIERCOMPIL)/%.o: $(FICHIERSRC2)/%.c
+	@mkdir -p $(FICHIERCOMPIL)
+	$(CC) $(CCFLAGS) -c $< -o $@
+
+
+
 # nettoyage
 clear:
-	@rm -rf $(FICHIERCOMPIL) $(FICHIERCOMPIL)
+	@echo nettoyage
+	@rm -rf $(FICHIERCOMPIL) 
