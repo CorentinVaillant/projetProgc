@@ -16,7 +16,6 @@ void ArbreAfficher(tArbre Arbre){
         return ;
     }
         
-    
     pFiche id = Arbre->pPremiere;
     pFiche dern = Arbre->pDerniere;
 
@@ -56,6 +55,23 @@ void ArbreAfficher(tArbre Arbre){
         if(!(dern->pMere) || !(dern->pMere->Identite)) printf("inconnu");
         else IdentiteAfficher(dern->pMere->Identite);
         printf("\n");
+}
+
+void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite){
     
+    if(!Identite){
+        fprintf(stderr,"ERREUR : Identite = NULL");
+        return ;
+    }
     
+    pFiche pId = calloc(1,sizeof(struct sFiche));
+    
+    pId->Identite = Identite;
+
+    if(!pId){
+        fprintf(stderr,"ERREUR : echec dans l'allouage de struct sFiche* pId !");
+        return ;
+    }
+
+    Arbre->pDerniere->pSuivante = pId;
 }

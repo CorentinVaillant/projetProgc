@@ -21,5 +21,6 @@ typedef struct sArbre * tArbre ;
 
 extern tArbre ArbreCreer(void);
 extern void ArbreAfficher(tArbre Arbre);
+extern void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite);
 
 #endif//GENA_H
