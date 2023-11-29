@@ -1,7 +1,7 @@
 # Compileur
 CC = gcc
 # Flags compileur 
-CCFLAGS = -Wall -fsanitize=address
+CCFLAGS = -Wall -fsanitize=address -g
 
 # Dossiers
 FICHIERSRC1 = src1

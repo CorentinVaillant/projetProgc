@@ -20,5 +20,6 @@ struct sFiche{
 typedef struct sArbre * tArbre ;
 
 extern tArbre ArbreCreer(void);
+extern void ArbreAfficher(tArbre Arbre);
 
 #endif//GENA_H
