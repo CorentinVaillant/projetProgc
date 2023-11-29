@@ -22,7 +22,15 @@ void test(void){
     abrAsaucisse->pPremiere = &george;
     abrAsaucisse->pDerniere = &papa;
 
-    ArbreAjouterPersonne(abrAsaucisse,IdentiteCreer(0,"pig","papi",'M',"00/00/0000"));
+    printf("\x1b[31mArbreAfficher\n\x1b[0m");
+    ArbreAfficher(abrAsaucisse);
+
+    printf("\x1b[31mAjout de papi pig à la famille \n\x1b[0m");
+    tIdentite papi = IdentiteCreer(0,"pig","papi",'M',"00/00/0000");
+    printf("papi pig : "); IdentiteAfficher(papi); printf("\n");
+    ArbreAjouterPersonne(abrAsaucisse,papi);
+    
+    
 
     printf("\x1b[31mArbreAfficher\n\x1b[0m");
     ArbreAfficher(abrAsaucisse);
@@ -34,5 +42,6 @@ void test(void){
 
 int main(){
     test();
+    
     return 0;
 }

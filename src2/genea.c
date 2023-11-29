@@ -1,6 +1,9 @@
 #include "genea.h"
 #include <stdlib.h>
 
+#define ROUGE "\x1b[31m"
+#define BLANC   "\x1b[0m"
+
 typedef  struct sFiche * pFiche;
 
 tArbre ArbreCreer(void){
@@ -10,16 +13,20 @@ tArbre ArbreCreer(void){
 void ArbreAfficher(tArbre Arbre){
 
     if(!Arbre->pPremiere || !Arbre->pDerniere){
-        printf("!%d\n", (int) Arbre->pPremiere);
-        printf("!%d\n", (int) Arbre->pDerniere);
-        perror("aaaah");
+        fprintf(stderr,"%sERREUR%s : Pointeur invalide :\n\tArbre->pPremiere = %p \n\tArbre->pDerniere = %p\n",
+        ROUGE,
+        BLANC,
+        Arbre->pPremiere,
+        Arbre->pDerniere);
         return ;
     }
         
     pFiche id = Arbre->pPremiere;
     pFiche dern = Arbre->pDerniere;
 
-    while (id!=dern){
+    if(!(id->pSuivante))printf("AZAAAAAAAAH§!!!");
+
+    while ((id->pSuivante)){
         //affichage de l'identité
         if(!id->Identite) printf("inconnu");
         else IdentiteAfficher(id->Identite);
@@ -35,32 +42,19 @@ void ArbreAfficher(tArbre Arbre){
         else IdentiteAfficher(id->pMere->Identite);
         printf("\n");
 
-        if(id == id->pSuivante)
-            return ;
+        if(id == id->pSuivante){
+            fprintf(stderr,"%sERREUR%s : l'identité pointe vers elle même",ROUGE,BLANC);
+            return ;}
 
         id = id->pSuivante;
+        fflush(stdout);
     }
-
-        //affichage de l'identité
-        if(!dern->Identite) printf("inconnu");
-        else IdentiteAfficher(dern->Identite);
-        
-        //affichage du père
-        printf("\n\tPère : ");
-        if(!(dern->pPere) || !(dern->pPere->Identite)) printf("inconnu");
-        else IdentiteAfficher(dern->pPere->Identite);
-
-        //affichage de la mère
-        printf("\n\tMère : ");
-        if(!(dern->pMere) || !(dern->pMere->Identite)) printf("inconnu");
-        else IdentiteAfficher(dern->pMere->Identite);
-        printf("\n");
 }
 
 void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite){
     
     if(!Identite){
-        fprintf(stderr,"ERREUR : Identite = NULL");
+        fprintf(stderr,"%sERREUR%s : Identite = NULL",ROUGE,BLANC);
         return ;
     }
     
@@ -69,9 +63,9 @@ void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite){
     pId->Identite = Identite;
 
     if(!pId){
-        fprintf(stderr,"ERREUR : echec dans l'allouage de struct sFiche* pId !");
+        fprintf(stderr,"%sERREUR%s : echec dans l'allouage de struct sFiche* pId !",ROUGE,BLANC);
         return ;
     }
 
     Arbre->pDerniere->pSuivante = pId;
-}
+};
