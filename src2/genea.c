@@ -4,7 +4,10 @@
 #define ROUGE "\x1b[31m"
 #define BLANC   "\x1b[0m"
 
+
 typedef  struct sFiche * pFiche;
+
+
 
 tArbre ArbreCreer(void){
     return malloc(sizeof(struct sArbre));
