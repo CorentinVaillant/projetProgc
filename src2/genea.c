@@ -29,7 +29,7 @@ void ArbreAfficher(tArbre Arbre){
 
     if(!(id->pSuivante))printf("AZAAAAAAAAH§!!!");
 
-    while ((id->pSuivante)){
+    while (id->pSuivante){
         //affichage de l'identité
         if(!id->Identite) printf("inconnu");
         else IdentiteAfficher(id->Identite);
@@ -62,13 +62,13 @@ void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite){
     }
     
     pFiche pId = calloc(1,sizeof(struct sFiche));
-    
-    pId->Identite = Identite;
 
     if(!pId){
         fprintf(stderr,"%sERREUR%s : echec dans l'allouage de struct sFiche* pId !",ROUGE,BLANC);
         return ;
     }
+    pId->Identite = Identite;
 
     Arbre->pDerniere->pSuivante = pId;
+    Arbre->pDerniere = pId;
 };

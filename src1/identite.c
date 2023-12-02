@@ -161,6 +161,7 @@ tIdentite IdentiteLiref(FILE *f){
     
     
     Sexe = (char) fgetc(f);
+    
     if(!Sexe)
         return NULL;
     
