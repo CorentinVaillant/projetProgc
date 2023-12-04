@@ -13,14 +13,15 @@ void test(void){
         IdentiteAfficher(famille[i]);
     }printf("\n");
 
-    struct sFiche papa = {famille[2],NULL};
-    struct sFiche mama = {famille[3],NULL,NULL,&papa};
-    struct sFiche pepa = {famille[0],&papa,&mama,&mama};
-    struct sFiche george = {famille[1],&papa,&mama,&pepa};
+
+    pFiche pPapa = CreerFiche(famille[2],NULL,NULL,NULL);
+    pFiche pMama = CreerFiche(famille[3],NULL,NULL,pPapa);
+    pFiche pPepa = CreerFiche(famille[0],pPapa,pMama,pMama);
+    pFiche pGeorge = CreerFiche(famille[1],pPapa,pMama,pPepa);
 
     tArbre abrAsaucisse = ArbreCreer();
-    abrAsaucisse->pPremiere = &george;
-    abrAsaucisse->pDerniere = &papa;
+    abrAsaucisse->pPremiere = pGeorge;
+    abrAsaucisse->pDerniere = pPapa;
 
     printf("\x1b[31mArbreAfficher\n\x1b[0m");
     ArbreAfficher(abrAsaucisse);
@@ -35,13 +36,16 @@ void test(void){
     printf("\x1b[31mArbreAfficher\n\x1b[0m");
     ArbreAfficher(abrAsaucisse);
 
+    ArbreLiberer(abrAsaucisse);
+
     printf("--OK--\n");
 
 }
 
 
 int main(){
-    test();
+    test();   
     
+    ArbreAfficher(ArbreLirePersonnesFichier("arbres/arbre4.ind")); 
     return 0;
 }

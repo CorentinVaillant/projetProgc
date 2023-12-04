@@ -1,7 +1,9 @@
 # Compileur
 CC = gcc
 # Flags compileur 
-CCFLAGS = -Wall -g #-fsanitize=address 
+CCFLAGS = -Wall -g -fsanitize=address 
+# Debogueur
+DEBOGUEUR = gdb
 
 # Dossiers
 FICHIERSRC1 = src1
@@ -22,11 +24,16 @@ EXECUTABLE = $(FICHIERCOMPIL)/testgenea.out
 
 all: $(EXECUTABLE)
 
+valgrind: $(EXECUTABLE)
+	valgrind $(EXECUTABLE)
+
 
 run : $(EXECUTABLE)
 	@echo run $(EXECUTABLE)
 	@./$(EXECUTABLE)
 
+debug : $(EXECUTABLE)
+	@gdb $(EXECUTABLE)
 
 # création des executables
 $(EXECUTABLE): $(OBJECTS)

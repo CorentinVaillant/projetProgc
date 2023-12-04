@@ -5,12 +5,18 @@
 #define BLANC   "\x1b[0m"
 
 
-typedef  struct sFiche * pFiche;
-
-
-
 tArbre ArbreCreer(void){
-    return malloc(sizeof(struct sArbre));
+    return malloc(sizeof(struct sArbre));;
+}
+
+pFiche CreerFiche(tIdentite Identite, pFiche pPere, pFiche pMere, pFiche pSuivante){
+    pFiche id = malloc(sizeof(struct sFiche));
+    if(!id) return NULL;
+    id->Identite = Identite;
+    id->pPere = pPere;
+    id->pMere = pMere;
+    id->pSuivante = pSuivante;
+    return id;
 }
 
 void ArbreAfficher(tArbre Arbre){
@@ -25,11 +31,10 @@ void ArbreAfficher(tArbre Arbre){
     }
         
     pFiche id = Arbre->pPremiere;
-    pFiche dern = Arbre->pDerniere;
 
-    if(!(id->pSuivante))printf("AZAAAAAAAAH§!!!");
+    if(!(id->pSuivante))printf("AZAAAAAAAAH§!!!"); //remplacer par erreur 
 
-    while (id->pSuivante){
+    while (id){
         //affichage de l'identité
         if(!id->Identite) printf("inconnu");
         else IdentiteAfficher(id->Identite);
@@ -71,4 +76,36 @@ void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite){
 
     Arbre->pDerniere->pSuivante = pId;
     Arbre->pDerniere = pId;
-};
+}
+
+void ArbreLiberer(tArbre Arbre){
+    pFiche id = Arbre->pPremiere;
+
+    if(!(id->pSuivante))printf("AZAAAAAAAAH§!!!"); //remplacer par erreur 
+
+    while (id){
+        pFiche idSuivant = id->pSuivante;
+        IdentiteLiberer(id->Identite);
+        free(id->Identite);
+        free(id);
+        id = idSuivant;    
+    }
+    free(Arbre);
+    
+}
+
+tArbre ArbreLirePersonnesFichier(char Fichier[]){
+    FILE *fichier = fopen(Fichier,"rt");
+    if(!fichier) return NULL;
+    tArbre abr = ArbreCreer();
+    tIdentite id = IdentiteLiref(fichier);
+    abr->pPremiere = CreerFiche(id,NULL,NULL,NULL);
+    abr->pDerniere = CreerFiche(id,NULL,NULL,NULL);
+    id = IdentiteLiref(fichier);
+    
+    while (id!=NULL){
+        abr->pPremiere = CreerFiche(id,NULL,NULL,abr->pPremiere);
+        id = IdentiteLiref(fichier);
+    }
+    return abr;
+}

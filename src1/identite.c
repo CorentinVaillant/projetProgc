@@ -67,6 +67,8 @@ tIdentite IdentiteCreer(int Id, char *Nom, char *Prenom, char Sexe, char DateNai
     char *pNom = malloc(sizeof(char)*(LongueurString(Nom)+1));
     char *pPrenom = malloc(sizeof(char)*(LongueurString(Prenom)+1));
     if(!pNom || !pPrenom){ //vérification de la réussite du malloc
+        free(pPrenom);
+        free(pNom);
         return NULL;
     }
     for(int i = 0 ; i<LongueurString(Nom)+1 ; i++){
@@ -75,7 +77,6 @@ tIdentite IdentiteCreer(int Id, char *Nom, char *Prenom, char Sexe, char DateNai
     for(int i = 0 ; i<LongueurString(Prenom)+1 ; i++){
         pPrenom[i] = Prenom[i];
     }
-
 
     //création de la variable tIdentite renvoyé:
     tIdentite nouvIdentite = malloc(sizeof(struct sIdentite));
