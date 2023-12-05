@@ -26,5 +26,6 @@ extern void ArbreAfficher(tArbre Arbre);
 extern void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite);
 extern void ArbreLiberer(tArbre Arbre);
 extern tArbre ArbreLirePersonnesFichier(char Fichier[]);
+extern void ArbreAjouterLienParente(tArbre Arbre, int IdEnfant, int IdParent, char Parente);
 
 #endif//GENA_H

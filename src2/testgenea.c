@@ -44,8 +44,12 @@ void test(void){
 
 
 int main(){
-    test();   
+    // test();   
     
-    ArbreAfficher(ArbreLirePersonnesFichier("arbres/arbre4.ind")); 
+    tArbre abr =  ArbreLirePersonnesFichier("arbres/arbre4.ind");
+    ArbreAjouterLienParente(abr,122,19,'P');
+    ArbreAfficher(abr);
+    ArbreLiberer(abr);
+    
     return 0;
 }

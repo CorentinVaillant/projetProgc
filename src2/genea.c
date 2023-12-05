@@ -4,7 +4,18 @@
 #define ROUGE "\x1b[31m"
 #define BLANC   "\x1b[0m"
 
+//prives
 
+static pFiche trouverIdArbre(tArbre abr,int id){
+    pFiche fiche = abr->pPremiere;
+    while (fiche && (fiche->Identite->Identifiant != id)){
+        fiche = fiche->pSuivante;
+    }
+    return fiche;
+    
+}
+
+//publiques
 tArbre ArbreCreer(void){
     return malloc(sizeof(struct sArbre));;
 }
@@ -100,12 +111,32 @@ tArbre ArbreLirePersonnesFichier(char Fichier[]){
     tArbre abr = ArbreCreer();
     tIdentite id = IdentiteLiref(fichier);
     abr->pPremiere = CreerFiche(id,NULL,NULL,NULL);
-    abr->pDerniere = CreerFiche(id,NULL,NULL,NULL);
+    abr->pDerniere = abr->pPremiere;
     id = IdentiteLiref(fichier);
     
     while (id!=NULL){
         abr->pPremiere = CreerFiche(id,NULL,NULL,abr->pPremiere);
         id = IdentiteLiref(fichier);
     }
+    fclose(fichier);
     return abr;
+}
+
+void ArbreAjouterLienParente(tArbre Arbre, int IdEnfant, int IdParent, char Parente){
+    pFiche fiche = Arbre->pPremiere;
+    pFiche pEnfant = trouverIdArbre(Arbre,IdEnfant);
+    pFiche pParent = trouverIdArbre(Arbre,IdParent);
+
+    if(!pEnfant || !pParent){
+        printf("%sERROR:%s id enfant ou id parent non trouvé : \npEnfant =%p \npParent =%p\n",
+        ROUGE,BLANC,pEnfant,pParent);
+        return;
+    }
+
+    if (Parente == 'M')
+        pEnfant->pMere = pParent;
+    else if (Parente == 'P')
+        pEnfant->pPere = pParent;
+    else
+        printf("%sERROR:%s lien de parente inconnus : %c\n",ROUGE,BLANC,Parente);
 }

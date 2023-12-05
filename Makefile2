@@ -1,7 +1,7 @@
 # Compileur
 CC = gcc
 # Flags compileur 
-CCFLAGS = -Wall -g -fsanitize=address 
+CCFLAGS = -Wall -g 
 # Debogueur
 DEBOGUEUR = gdb
 
@@ -24,8 +24,9 @@ EXECUTABLE = $(FICHIERCOMPIL)/testgenea.out
 
 all: $(EXECUTABLE)
 
+
 valgrind: $(EXECUTABLE)
-	valgrind $(EXECUTABLE)
+	valgrind -s --leak-check=full $(EXECUTABLE)
 
 
 run : $(EXECUTABLE)
