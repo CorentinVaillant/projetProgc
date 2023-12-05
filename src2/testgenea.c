@@ -1,6 +1,6 @@
 #include "genea.h"
 
-void test(void){
+void test1(void){
     tIdentite famille[4] = {
         IdentiteCreer(1,"pig","pepa",'F',"01/04/2030"),
         IdentiteCreer(2,"pig","george",'M',"06/01/2032"),
@@ -43,13 +43,10 @@ void test(void){
 }
 
 
-int main(){
-    // test();   
-    
-    tArbre abr =  ArbreLirePersonnesFichier("arbres/arbre4.ind");
-    ArbreAjouterLienParente(abr,122,19,'P');
+int main(int argc, char **argv){
+    tArbre abr = ArbreLirePersonnesFichier(argv[1]);
+    ArbreLireLienParenteFichier(abr,argv[2]);
     ArbreAfficher(abr);
     ArbreLiberer(abr);
-    
     return 0;
 }

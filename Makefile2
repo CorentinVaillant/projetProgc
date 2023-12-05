@@ -20,28 +20,31 @@ SOURCES = $(patsubst %.c,$(FICHIERSRC1)/%.c,identite.c) $(patsubst %.c,$(FICHIER
 OBJECTS = $(patsubst %.c,$(FICHIERCOMPIL)/%.o,$(SOURCES1) $(SOURCES2))
 # Nom executable
 EXECUTABLE = $(FICHIERCOMPIL)/testgenea.out
+#Arguments executables
+ARG = arbres/arbre4.ind arbres/arbre4.par
 
 
 all: $(EXECUTABLE)
 
 
 valgrind: $(EXECUTABLE)
-	valgrind -s --leak-check=full $(EXECUTABLE)
+	valgrind -s --leak-check=full $(EXECUTABLE) $(ARG)
 
 
 run : $(EXECUTABLE)
-	@echo run $(EXECUTABLE)
-	@./$(EXECUTABLE)
+	@echo run $(EXECUTABLE) $(ARG)
+	./$(EXECUTABLE) $(ARG)
+
 
 debug : $(EXECUTABLE)
-	@gdb $(EXECUTABLE)
+	@gdb $(EXECUTABLE) $(ARG)
 
 # création des executables
 $(EXECUTABLE): $(OBJECTS)
 	@mkdir -p $(FICHIERCOMPIL)
 	@echo $(OBJECTS)
 	$(CC) $(CCFLAGS) $(OBJECTS) -o $@
-	# $(CC) $(CCFLAGS) $^ -o $@
+
 
 # compilation des objets
 $(FICHIERCOMPIL)/%.o: $(FICHIERSRC1)/%.c

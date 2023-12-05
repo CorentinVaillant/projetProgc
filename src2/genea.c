@@ -115,7 +115,9 @@ tArbre ArbreLirePersonnesFichier(char Fichier[]){
     id = IdentiteLiref(fichier);
     
     while (id!=NULL){
-        abr->pPremiere = CreerFiche(id,NULL,NULL,abr->pPremiere);
+        // abr->pPremiere = CreerFiche(id,NULL,NULL,abr->pPremiere);
+        abr->pDerniere->pSuivante = CreerFiche(id,NULL,NULL,NULL);
+        abr->pDerniere = abr->pDerniere->pSuivante;
         id = IdentiteLiref(fichier);
     }
     fclose(fichier);
@@ -123,7 +125,6 @@ tArbre ArbreLirePersonnesFichier(char Fichier[]){
 }
 
 void ArbreAjouterLienParente(tArbre Arbre, int IdEnfant, int IdParent, char Parente){
-    pFiche fiche = Arbre->pPremiere;
     pFiche pEnfant = trouverIdArbre(Arbre,IdEnfant);
     pFiche pParent = trouverIdArbre(Arbre,IdParent);
 
@@ -150,6 +151,7 @@ tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){
     if(!f){
         perror("AAAh");// insérer erreur
         return NULL;}
+    long int pos = ftell(f);
     while (!feof(f)){
         //passe tout les '\n'
         while (fgetc(f) == (int)'\n') ;
@@ -159,6 +161,15 @@ tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){
         char parente;
         ArbreLireLienParentef(f,&idEnfant,&idParent,&parente);
         ArbreAjouterLienParente(Arbre,idEnfant,idParent,parente);
+        
+        while (fgetc(f) == (int)' ') ;
+        //fseek(f,-1,SEEK_CUR);
+
+        if (pos == ftell(f)){
+            printf("ERREUR !!!!\n");
+            return NULL;
+        }
+        pos = ftell(f);
     }
     return Arbre;
 }
