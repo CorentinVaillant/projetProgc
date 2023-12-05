@@ -1,0 +1,66 @@
+# Compileur
+CC = gcc
+# Flags compileur 
+CCFLAGS = -Wall -g 
+# Debogueur
+DEBOGUEUR = gdb
+
+# Dossiers
+FICHIERSRC1 = src1
+FICHIERSRC2 = src2
+FICHIERSRC3 = src3
+FICHIERCOMPIL = compil
+
+# Fichiers compile
+SOURCES1 = identite.c
+SOURCES2 = testgenea.c genea.c
+SOURCES3 = 
+
+#à modifié
+SOURCES = $(patsubst %.c,$(FICHIERSRC1)/%.c,identite.c) $(patsubst %.c,$(FICHIERSRC2)/%.c,testgenea.c genea.c)
+
+# Fichier objet
+OBJECTS = $(patsubst %.c,$(FICHIERCOMPIL)/%.o,$(SOURCES1) $(SOURCES2) $(SOURCES2))
+# Nom executable
+EXECUTABLE = $(FICHIERCOMPIL)/testgenea.out
+#Arguments executables
+ARG = arbres/arbre4.ind arbres/arbre4.par
+
+
+all: $(EXECUTABLE)
+
+
+valgrind: $(EXECUTABLE)
+	valgrind -s --leak-check=full $(EXECUTABLE) $(ARG)
+
+
+run : $(EXECUTABLE)
+	@echo run $(EXECUTABLE) $(ARG)
+	./$(EXECUTABLE) $(ARG)
+
+
+debug : $(EXECUTABLE)
+	@gdb $(EXECUTABLE) $(ARG)
+
+# création des executables
+$(EXECUTABLE): $(OBJECTS)
+	@mkdir -p $(FICHIERCOMPIL)
+	@echo $(OBJECTS)
+	$(CC) $(CCFLAGS) $(OBJECTS) -o $@
+
+
+# compilation des objets
+$(FICHIERCOMPIL)/%.o: $(FICHIERSRC1)/%.c
+	@mkdir -p $(FICHIERCOMPIL)
+	$(CC) $(CCFLAGS) -c $< -o $@
+
+$(FICHIERCOMPIL)/%.o: $(FICHIERSRC2)/%.c
+	@mkdir -p $(FICHIERCOMPIL)
+	$(CC) $(CCFLAGS) -c $< -o $@
+
+
+
+# nettoyage
+clear:
+	@echo nettoyage
+	@rm -rf $(FICHIERCOMPIL) 
