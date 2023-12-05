@@ -1,4 +1,4 @@
 ./compil
 *.o
-.vscode
+.vscode/*
 *.out
