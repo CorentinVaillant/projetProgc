@@ -1,7 +1,0 @@
-{
-    "makefile.compileCommandsPath": "make -f Makefile1",
-    "files.associations": {
-        "stdio.h": "c",
-        "stdlib.h": "c"
-    }
-}
