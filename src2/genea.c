@@ -140,3 +140,18 @@ void ArbreAjouterLienParente(tArbre Arbre, int IdEnfant, int IdParent, char Pare
     else
         printf("%sERROR:%s lien de parente inconnus : %c\n",ROUGE,BLANC,Parente);
 }
+
+int ArbreLireLienParentef(FILE *f, int *pIdEnfant, int *pIdParent, char *pParente){
+    return fscanf(f,"%d %d %c",pIdEnfant,pIdParent,pParente);
+}
+
+tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){
+    FILE *f = fopen(Fichier,"rt");
+    if(!f){
+        perror("AAAh");// insérer erreur
+        return NULL;}
+    while (fgetc(f) == (int)'\n') ;
+    //passe tout les '\n'
+    fseek(f,-1,SEEK_CUR);
+    //here !
+}
