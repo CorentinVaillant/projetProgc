@@ -150,8 +150,15 @@ tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){
     if(!f){
         perror("AAAh");// insérer erreur
         return NULL;}
-    while (fgetc(f) == (int)'\n') ;
-    //passe tout les '\n'
-    fseek(f,-1,SEEK_CUR);
-    //here !
+    while (!feof(f)){
+        //passe tout les '\n'
+        while (fgetc(f) == (int)'\n') ;
+        fseek(f,-1,SEEK_CUR);
+        
+        int idEnfant, idParent;
+        char parente;
+        ArbreLireLienParentef(f,&idEnfant,&idParent,&parente);
+        ArbreAjouterLienParente(Arbre,idEnfant,idParent,parente);
+    }
+    return Arbre;
 }
