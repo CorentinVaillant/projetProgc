@@ -27,7 +27,6 @@ static unsigned int LongueurString(char String[]){
 }
 
 
-
 int ajoutString(char **string, char *ajout) {
     unsigned int nbChar = LongueurString(*string) + LongueurString(ajout);
     *string = realloc(*string, (nbChar + 1) * sizeof(char));
@@ -283,6 +282,16 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
 
     pFiche id = Arbre->pPremiere;
     while (id){
+
+        if(!id->Identite){
+            fclose(f);
+            free(homme);
+            free(femme);
+            free(lien);
+            perror("AAAAAh!");
+            return ;
+        }
+
         char buffer[100];
         sprintf(buffer,"\t%d [label=\"%s\\n%s\\n%s\"]\n",
         id->Identite->Identifiant,
