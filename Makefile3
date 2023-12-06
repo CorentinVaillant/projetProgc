@@ -8,7 +8,7 @@ DEBOGUEUR = gdb
 # Dossiers
 FICHIERSRC1 = src1
 FICHIERSRC2 = src2
-FICHIERSRC3 = src2
+FICHIERSRC3 = src3
 FICHIERCOMPIL = compil
 
 # Fichiers compile
@@ -24,10 +24,9 @@ OBJECTS = $(patsubst %.c,$(FICHIERCOMPIL)/%.o,$(SOURCES1) $(SOURCES2) $(SOURCES3
 # Nom executable
 EXECUTABLE = $(FICHIERCOMPIL)/visuarbre.out
 #Arguments executables
-ARG = arbres/arbre4.ind arbres/arbre4.par
+ARG = arbres/arbre10.ind arbres/arbre10.par
 
-test:
-	@echo objets : $(OBJECTS)
+
 
 all: $(EXECUTABLE)
 	
@@ -48,7 +47,6 @@ debug : $(EXECUTABLE)
 # création des executables
 $(EXECUTABLE): $(OBJECTS)
 	@mkdir -p $(FICHIERCOMPIL)
-	@echo $(OBJECTS)
 	$(CC) $(CCFLAGS) $(OBJECTS) -o $@
 
 
@@ -58,6 +56,10 @@ $(FICHIERCOMPIL)/%.o: $(FICHIERSRC1)/%.c
 	$(CC) $(CCFLAGS) -c $< -o $@
 
 $(FICHIERCOMPIL)/%.o: $(FICHIERSRC2)/%.c
+	@mkdir -p $(FICHIERCOMPIL)
+	$(CC) $(CCFLAGS) -c $< -o $@
+
+$(FICHIERCOMPIL)/%.o: $(FICHIERSRC3)/%.c
 	@mkdir -p $(FICHIERCOMPIL)
 	$(CC) $(CCFLAGS) -c $< -o $@
 

@@ -1,0 +1,31 @@
+digraph {
+	rankdir = " BT " ;
+	node [ shape = box , color = blue , fontname = " Arial " , fontsize =10];
+	122 [label="DUBOURG\nPierre\n15/12/1910"]
+	18 [label="DUBOURG\nJean\n21/07/1866"]
+	4 [label="CHARLOT\nJean-Louis\n09/05/1945"]
+	111 [label="CHARLOT\nJean\n10/05/1925"]
+	112 [label="CHARLOT\nRoland\n10/06/1927"]
+	8 [label="CHARLOT\nJacques\n08/04/1900"]
+
+	node [ color = green ];
+	9 [label="DUBOURG\nCatherine\n21/08/1904"]
+	19 [label="COURBIN\nMarthe\n22/04/1872"]
+	121 [label="DUBOURG\nPaula\n27/02/1892"]
+	17 [label="LAFONT\nMarie\n13/10/1869"]
+
+	edge [ dir = none ];
+	19 -> 122;
+	18 -> 122;
+	19 -> 9;
+	18 -> 9;
+	19 -> 121;
+	18 -> 121;
+	9 -> 4;
+	8 -> 4;
+	9 -> 111;
+	8 -> 111;
+	9 -> 112;
+	8 -> 112;
+	17 -> 8;
+}

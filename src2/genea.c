@@ -15,6 +15,32 @@ static pFiche trouverIdArbre(tArbre abr,int id){
     
 }
 
+static unsigned int LongueurString(char String[]){
+    char cara = String[0];
+    int longueur=0;
+    while (cara!='\0'){
+        longueur++;
+        cara = String[longueur];
+    }
+    return longueur;
+}
+
+
+
+int ajoutString(char **string, char *ajout) {
+    unsigned int nbChar = LongueurString(*string) + LongueurString(ajout);
+    *string = realloc(*string, (nbChar + 1) * sizeof(char));
+    if (!*string) {
+        perror("AÏE AÏE AÏE !");
+        return -1;
+    }
+    
+    snprintf(*string + LongueurString(*string), nbChar + 1, "%s", ajout);
+
+    return nbChar;
+}
+
+
 //publiques
 tArbre ArbreCreer(void){
     return malloc(sizeof(struct sArbre));;
@@ -146,7 +172,7 @@ int ArbreLireLienParentef(FILE *f, int *pIdEnfant, int *pIdParent, char *pParent
     return fscanf(f,"%d %d %c",pIdEnfant,pIdParent,pParente);
 }
 
-tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){
+tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){ //à modifié pour copier arbre et revoyer arbre 
     FILE *f = fopen(Fichier,"rt");
     if(!f){
         perror("AAAh");// insérer erreur
@@ -163,13 +189,78 @@ tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){
         ArbreAjouterLienParente(Arbre,idEnfant,idParent,parente);
         
         while (fgetc(f) == (int)' ') ;
-        //fseek(f,-1,SEEK_CUR);
+        //passe tout les '\n'
+        while (fgetc(f) == (int)'\n') ;
+        fseek(f,-1,SEEK_CUR);
 
-        if (pos == ftell(f)){
-            printf("ERREUR !!!!\n");
-            return NULL;
-        }
+        if (pos == ftell(f))
+            return Arbre;
+    
         pos = ftell(f);
     }
     return Arbre;
+}
+
+//niveau 3
+
+void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
+    FILE *f = fopen(Fichier,"wt");
+    if(!f){
+        perror("AAAAAAH!:!!!!");//mettre erreur !
+        return;
+    }
+
+    char *homme = calloc(sizeof(char),77);
+    char *femme = calloc(sizeof(char),27 );
+    char *lien  = calloc(sizeof(char),24 );
+    sprintf(homme,"\n\tnode [ shape = box , color = blue , fontname = \" Arial \" , fontsize =10];\n");
+    sprintf(femme,"\n\tnode [ color = green ];\n");
+    sprintf(lien ,"\n\tedge [ dir = none ];\n");
+
+    pFiche id = Arbre->pPremiere;
+    while (id){
+        char buffer[100];
+        sprintf(buffer,"\t%d [label=\"%s\\n%s\\n%s\"]\n",
+        id->Identite->Identifiant,
+        id->Identite->Nom,
+        id->Identite->Prenom,
+        id->Identite->DateNaissance);
+            
+        if(id->Identite->Sexe=='M')
+            ajoutString(&homme,buffer);
+        else
+            ajoutString(&femme,buffer);
+        
+        if(id->pMere){
+            char buffer[50];
+            sprintf(buffer,"\t%d -> %d;\n",
+            id->pMere->Identite->Identifiant,
+            id->Identite->Identifiant);
+            ajoutString(&lien,buffer);
+        }
+        if(id->pPere){
+            char buffer[50];
+            sprintf(buffer,"\t%d -> %d;\n",
+            id->pPere->Identite->Identifiant,
+            id->Identite->Identifiant);
+            ajoutString(&lien,buffer);
+        }
+
+        
+
+        id = id->pSuivante;
+    }
+
+
+    fprintf(f,"digraph {\n\trankdir = \" BT \" ;");
+    fprintf(f,"%s",homme);
+    fprintf(f,"%s",femme);
+    fprintf(f,"%s",lien);
+    fprintf(f,"}");
+    fclose(f);
+
+}
+
+void ArbreAfficherAscendants(tArbre Arbre, int Identifiant){
+    
 }
