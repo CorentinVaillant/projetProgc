@@ -8,26 +8,29 @@ DEBOGUEUR = gdb
 # Dossiers
 FICHIERSRC1 = src1
 FICHIERSRC2 = src2
-FICHIERSRC3 = src3
+FICHIERSRC3 = src2
 FICHIERCOMPIL = compil
 
 # Fichiers compile
 SOURCES1 = identite.c
-SOURCES2 = testgenea.c genea.c
-SOURCES3 = 
+SOURCES2 = genea.c
+SOURCES3 = visuarbre.c
 
 #à modifié
-SOURCES = $(patsubst %.c,$(FICHIERSRC1)/%.c,identite.c) $(patsubst %.c,$(FICHIERSRC2)/%.c,testgenea.c genea.c)
+SOURCES = $(patsubst %.c,$(FICHIERSRC1)/%.c,identite.c) $(patsubst %.c,$(FICHIERSRC2)/%.c, genea.c) $(patsubst %.c,$(FICHIERSRC3)/%.c, visuarbre.c)
 
 # Fichier objet
-OBJECTS = $(patsubst %.c,$(FICHIERCOMPIL)/%.o,$(SOURCES1) $(SOURCES2) $(SOURCES2))
+OBJECTS = $(patsubst %.c,$(FICHIERCOMPIL)/%.o,$(SOURCES1) $(SOURCES2) $(SOURCES3))
 # Nom executable
-EXECUTABLE = $(FICHIERCOMPIL)/testgenea.out
+EXECUTABLE = $(FICHIERCOMPIL)/visuarbre.out
 #Arguments executables
 ARG = arbres/arbre4.ind arbres/arbre4.par
 
+test:
+	@echo objets : $(OBJECTS)
 
 all: $(EXECUTABLE)
+	
 
 
 valgrind: $(EXECUTABLE)
