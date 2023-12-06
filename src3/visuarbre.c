@@ -3,8 +3,8 @@
 int main(int argc, char **argv){
     tArbre abr = ArbreLirePersonnesFichier(argv[1]);
     ArbreLireLienParenteFichier(abr,argv[2]);
-    // ArbreAfficher(abr);
-    ArbreEcrireGV(abr, "arbre.dot");
+    // ArbreEcrireGV(abr, "arbre.dot");
+    ArbreAfficherAscendants(abr,4);
 
     ArbreLiberer(abr);
     return 0;

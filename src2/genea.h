@@ -33,6 +33,7 @@ extern tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]);
 //niveau 3 :
 
 extern void ArbreEcrireGV(tArbre Arbre, char Fichier[]);
-void ArbreAfficherAscendants(tArbre Arbre, int Identifiant);
+extern void ArbreAfficherAscendants(tArbre Arbre, int Identifiant);
+extern void ArbreEcrireAscendantsGV(tArbre Arbre, int Identifiant, char Fichier[]);
 
 #endif//GENA_H

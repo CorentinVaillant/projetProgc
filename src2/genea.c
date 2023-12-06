@@ -40,6 +40,25 @@ int ajoutString(char **string, char *ajout) {
     return nbChar;
 }
 
+static void ArbreAfficherAscendantsRec(tArbre Arbre, int Identifiant,unsigned int niveau){
+    pFiche pId = trouverIdArbre(Arbre,Identifiant);
+    if(!pId){
+        perror("aaah ascendant"); //mettre erreur
+        return ;
+    }
+    IdentiteAfficher(pId->Identite);
+    printf("\n");
+    if(pId->pPere){
+        for(int i = 0 ; i<niveau ; i++)    printf("\t");
+        printf("\tPère : ");
+        ArbreAfficherAscendantsRec(Arbre,pId->pPere->Identite->Identifiant,niveau+1);
+    }
+    if(pId->pMere){
+        for(int i = 0 ; i<niveau ; i++) printf("\t");
+        printf("\tMère : ");
+        ArbreAfficherAscendantsRec(Arbre,pId->pMere->Identite->Identifiant,niveau+1);   
+    }
+}
 
 //publiques
 tArbre ArbreCreer(void){
@@ -258,9 +277,29 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
     fprintf(f,"%s",lien);
     fprintf(f,"}");
     fclose(f);
+    free(homme);
+    free(femme);
+    free(lien);
 
 }
 
+
 void ArbreAfficherAscendants(tArbre Arbre, int Identifiant){
-    
+    ArbreAfficherAscendantsRec(Arbre,Identifiant,0);
+}
+
+void ArbreEcrireAscendantsGV(tArbre Arbre, int Identifiant, char Fichier[]){
+    pFiche pId = trouverIdArbre(Arbre,Identifiant);
+    if(!pId){
+        perror("aaah ascendant"); //mettre erreur
+        return ;
+    }
+    FILE *f = fopen(Fichier,"wt");
+    if(!f){
+        perror("AAAAAAH!:!!!!");//mettre erreur !
+        return;
+    }
+    fprintf(f,"digraph {\n\trankdir = \" BT \" ;\n\nnode [shape=box,fontname=\"Arial\",fontsize =10];\n\nedge [dir=none];");
+
+
 }
