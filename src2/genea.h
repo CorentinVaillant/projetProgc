@@ -21,7 +21,6 @@ typedef struct sArbre * tArbre ;
 typedef  struct sFiche * pFiche;
 
 extern tArbre ArbreCreer(void);
-extern pFiche CreerFiche(tIdentite Identite, pFiche pPere, pFiche pMere, pFiche pSuivante);
 extern void ArbreAfficher(tArbre Arbre);
 extern void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite);
 extern void ArbreLiberer(tArbre Arbre);

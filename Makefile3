@@ -1,7 +1,7 @@
 # Compileur
 CC = gcc
 # Flags compileur 
-CCFLAGS = -Wall -g 
+CCFLAGS = -Wall -g #-fsanitize=address
 # Debogueur
 DEBOGUEUR = gdb
 
@@ -29,11 +29,10 @@ ARG = arbres/arbre10.ind arbres/arbre10.par
 
 
 all: $(EXECUTABLE)
-	
 
 
 valgrind: $(EXECUTABLE)
-	valgrind -s --leak-check=full $(EXECUTABLE) $(ARG)
+	valgrind -s --track-origins=yes $(EXECUTABLE) $(ARG)
 
 
 run : $(EXECUTABLE)
@@ -69,3 +68,6 @@ $(FICHIERCOMPIL)/%.o: $(FICHIERSRC3)/%.c
 clear:
 	@echo nettoyage
 	@rm -rf $(FICHIERCOMPIL) 
+	@rm -rf *.pdf 
+	@rm -rf *.dot
+
