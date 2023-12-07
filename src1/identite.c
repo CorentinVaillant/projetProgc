@@ -25,18 +25,6 @@ static void raccourcirStr(char Str[]){
 
 //unused :
 /*
-int puissance(int a,int b){
-    if(a==1 || b == 0)
-        return 1;
-    if(a == 0)
-        return 0;
-    if(b%2 == 0){
-        int radpuiss = puissance(a,b/2);
-        return radpuiss*radpuiss;
-    }
-    int radpuiss = puissance(a,(b-1)/2);
-    return radpuiss*radpuiss*a;
-}
 
 int chrToInt(char Cara){
     return (int) Cara - 48;

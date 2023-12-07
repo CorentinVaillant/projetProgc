@@ -1,14 +1,3 @@
-## Notes projet :
-
-```txt
-identifiant
-nom
-prénom
-sexe
-date de naissance
-```
-le fichier est composer d'au plus 80 caractéres par lignes.
-
 ## à lire :
 
 ### requis:

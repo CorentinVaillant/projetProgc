@@ -30,6 +30,11 @@ void test(void){
 
 
 int main(int argc, char **argv){
-    test();
+    tArbre abr = ArbreLirePersonnesFichier(argv[1]);
+    ArbreLireLienParenteFichier(abr,argv[2]);
+    int id;
+    sscanf(argv[3],"%d",&id);
+    ArbreAfficherAscendants(abr,id);
+    ArbreEcrireAscendantsGV(abr,id,argv[4]);
     return 0;
 }
