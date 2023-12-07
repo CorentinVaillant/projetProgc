@@ -14,12 +14,12 @@ struct sIdentite{
 typedef struct sIdentite * tIdentite;
 
 //fonctions
-extern tIdentite IdentiteCreer(int Id, char *Nom, char *Prenom, char Sexe, char DateNais[]);
-extern int IdentiteIdentifiant(tIdentite Identite);
-extern char *IdentiteNom(tIdentite Identite);
-extern char *IdentitePrenom(tIdentite Identite);
-extern char IdentiteSexe(tIdentite Identite);
-extern char *IdentiteDateNaissance(tIdentite Identite);
-extern void IdentiteAfficher(tIdentite Identite);
-extern void IdentiteLiberer(tIdentite Identite);
-extern tIdentite IdentiteLiref(FILE *f);
+extern tIdentite IdentiteCreer(int Id, char *Nom, char *Prenom, char Sexe, char DateNais[]); //créer un structure sIdentite et renvoie sont pointeur
+extern int IdentiteIdentifiant(tIdentite Identite); //retourne identifiant d'une struct sIdentite grâce à sont pointeur Identite
+extern char *IdentiteNom(tIdentite Identite); //retourne le nom d'une struct sIdentite grâce à sont pointeur Identite
+extern char *IdentitePrenom(tIdentite Identite); //retourne le prénom d'une struct sIdentite grâce à sont pointeur Identite
+extern char IdentiteSexe(tIdentite Identite); //retourne le sexe d'une struct sIdentite grâce à sont pointeur Identite
+extern char *IdentiteDateNaissance(tIdentite Identite); //retourne la date de naissance d'une struct sIdentite grâce à sont pointeur Identite
+extern void IdentiteAfficher(tIdentite Identite); // affiche une structure tIdentite grâce à son pointeur, de la manière suivante : [identifiant] nom prenom sexe date de naissance
+extern void IdentiteLiberer(tIdentite Identite); //libère les varible Nom est prénom qui sont stocké dans la heap
+extern tIdentite IdentiteLiref(FILE *f); //lis une identité dans un fichiers 

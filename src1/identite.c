@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #define LONGUEURMOTMAX 80
+#define ERREUR "\x1b[31mERREUR\x1b[0m"
 
 //prive
 static unsigned int LongueurString(char String[]){
@@ -14,7 +15,7 @@ static unsigned int LongueurString(char String[]){
     }
     return longueur;
 }
-
+//retire tout les espaces ou retours à la ligne présent après les caractères autres
 static void raccourcirStr(char Str[]){
     int i = 0;
     while (Str[i] != ' ' && Str[i] != '\n' && Str[i] != '\0')
@@ -23,30 +24,7 @@ static void raccourcirStr(char Str[]){
     
 }
 
-//unused :
-/*
 
-int chrToInt(char Cara){
-    return (int) Cara - 48;
-}
-
-int strToInt(char String[]){
-    int longueur = LongueurString(String);
-    int result=0;
-    if(String[0]=='-'){
-        for(int i = 1; i<longueur; i++){
-        result -= chrToInt(String[i]) * puissance(10,longueur-i-1);
-        } 
-    }
-    else{
-        for(int i = 0; i<longueur; i++){
-            result += chrToInt(String[i]) * puissance(10,longueur-i-1);
-        }
-    }
-    return result;
-}
-
-*/
 //publique
 
 //fonction de creation d'une variable tIdentite
@@ -59,6 +37,7 @@ tIdentite IdentiteCreer(int Id, char *Nom, char *Prenom, char Sexe, char DateNai
         free(pNom);
         return NULL;
     }
+    //copie caractère par caractère
     for(int i = 0 ; i<LongueurString(Nom)+1 ; i++){
         pNom[i] = Nom[i];
     }
@@ -102,7 +81,7 @@ char IdentiteSexe(tIdentite Identite){
 char *IdentiteDateNaissance(tIdentite Identite){
     return Identite->DateNaissance;
 }
-
+//affichage de l'identité
 void IdentiteAfficher(tIdentite Identite){
     printf("[%d] %s %s, %c, %s ",IdentiteIdentifiant(Identite),IdentiteNom(Identite),IdentitePrenom(Identite),IdentiteSexe(Identite),IdentiteDateNaissance(Identite));
     fflush(stdout);
@@ -113,13 +92,8 @@ void IdentiteLiberer(tIdentite Identite){
     free(Identite->Nom);
     free(Identite->Prenom);
 }
+
 //lis le contenue d'un fichier pour les associe avec une variable tIdentite
-/*
-
-retourne NULL: erreur dans les conditions !
-
-
-*/
 tIdentite IdentiteLiref(FILE *f){
     int Identifiant ; 
     char Nom[LONGUEURMOTMAX +1],Prenom[LONGUEURMOTMAX +1], DateNaissance [LG_DATE +1];
@@ -129,37 +103,39 @@ tIdentite IdentiteLiref(FILE *f){
     if(!fscanf(f,"%d",&Identifiant))
         return NULL;
 
-    while (fgetc(f) == (int)' '); //passe tout les espace
-    //fseek(f,0,SEEK_CUR);
+    while (fgetc(f) == ' '); //passe tout les espace
     
     if(!fgets(Nom,LONGUEURMOTMAX+1,f)) //Nom<-L2 + vérification de ligne non vide/feof
         return NULL;
     fseek(f,-1,SEEK_CUR);
     if(fgetc(f)!='\n') //vérification du nombre de caractères max par ligne sur L2
         return NULL;
-    //fseek(f,-1,SEEK_CUR); 
     
 
     if(!fgets(Prenom,LONGUEURMOTMAX+1,f))//Prenom<-L3 + vérification de ligne non vide/feof
         return NULL;
     fseek(f,-1,SEEK_CUR);
 
-    if(fgetc(f)!='\n') //vérification du nombre de caractères max par ligne sur L3
-        return NULL;//error here
-    //fseek(f,-1,SEEK_CUR);
+    if(fgetc(f)!='\n'){ //vérification du nombre de caractères max par ligne sur L3
+        fprintf(stderr,"%s : format de fichier invalide",ERREUR);
+        return NULL;
+    }
     
     
     Sexe = (char) fgetc(f);
     
-    if(!Sexe)
+    if(!Sexe){
+        fprintf(stderr,"%s : format de fichier invalide",ERREUR);
         return NULL;
+    }
     
     
     while (fgetc(f) == (int)' '); //passe tout les espace
     
-    //fseek(f,-1,SEEK_CUR);
-    if(!fgets(DateNaissance,LG_DATE+1,f))
+    if(!fgets(DateNaissance,LG_DATE+1,f)){
+        fprintf(stderr,"%s : format de fichier invalide",ERREUR);
         return NULL;
+    }
 
     raccourcirStr(Nom);
     raccourcirStr(Prenom);

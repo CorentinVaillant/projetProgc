@@ -1,21 +1,23 @@
 #include "genea.h"
 #include <stdlib.h>
 
-#define ROUGE "\x1b[31m"
-#define BLANC   "\x1b[0m"
+#define ERREUR "\x1b[31mERREUR\x1b[0m"
 
 //prives
 
+// trouve une fiche dans un arbre à partir de l'identifiant de la variable tIdentite des struct sFiches, et renvoie le pointeur de la fiche
 static pFiche trouverIdArbre(tArbre abr,int id){
     if(!abr) return NULL;
     pFiche fiche = abr->pPremiere;
-    while (fiche && (fiche->Identite) && (fiche->Identite->Identifiant != id)){
+    
+    while (fiche && (fiche->Identite) && (IdentiteIdentifiant(fiche->Identite) != id)){
         fiche = fiche->pSuivante;
     }
     return fiche;
     
 }
 
+//renvoie la longeur d'une String
 static unsigned int LongueurString(char String[]){
     char cara = String[0];
     int longueur=0;
@@ -26,80 +28,84 @@ static unsigned int LongueurString(char String[]){
     return longueur;
 }
 
-
-int ajoutString(char **string, char *ajout) {
-    unsigned int nbChar = LongueurString(*string) + LongueurString(ajout);
-    *string = realloc(*string, (nbChar + 1) * sizeof(char));
-    if (!*string) {
-        perror("AÏE AÏE AÏE !");
+//ajoute à la fin d'une variable string une autre, et réallou la mémoire pour pouvoire faire cela
+static int ajoutString(char **pString, char *ajout) {
+    unsigned int nbChar = LongueurString(*pString) + LongueurString(ajout);
+    *pString = realloc(*pString, (nbChar + 1) * sizeof(char));
+    if (!*pString) {
+        fprintf(stderr,"%s :pString pointe vers NULL !\n");
         return -1;
     }
     
-    snprintf(*string + LongueurString(*string), nbChar + 1, "%s", ajout);
+    snprintf(*pString + LongueurString(*pString), nbChar + 1, "%s", ajout);
 
     return nbChar;
 }
 
+//fonction récursive d'affiche de l'arbre ascendant
 static void ArbreAfficherAscendantsRec(tArbre Arbre, int Identifiant,unsigned int niveau){
-    pFiche pId = trouverIdArbre(Arbre,Identifiant);
-    if(!pId){
-        perror("aaah ascendant"); //mettre erreur
+    pFiche pFi = trouverIdArbre(Arbre,Identifiant);
+    if(!pFi){
+        fprintf(stderr,"%s : Identifiant %d non trouvé !\n",ERREUR,Identifiant);
         return ;
     }
-    IdentiteAfficher(pId->Identite);
+    IdentiteAfficher(pFi->Identite);
     printf("\n");
-    if(pId->pPere){
+    if(pFi->pPere){
         for(int i = 0 ; i<niveau ; i++)    printf("\t");
         printf("\tPère : ");
-        ArbreAfficherAscendantsRec(Arbre,pId->pPere->Identite->Identifiant,niveau+1);
+        ArbreAfficherAscendantsRec(Arbre,IdentiteIdentifiant(pFi->pPere->Identite),niveau+1);
     }
-    if(pId->pMere){
+    if(pFi->pMere){
         for(int i = 0 ; i<niveau ; i++) printf("\t");
         printf("\tMère : ");
-        ArbreAfficherAscendantsRec(Arbre,pId->pMere->Identite->Identifiant,niveau+1);   
+        ArbreAfficherAscendantsRec(Arbre,IdentiteIdentifiant(pFi->pMere->Identite),niveau+1);   
     }
 }
 
+//fonction récurcive de l'écriture d'un arbre ascendant dans un fichier
 static void ArbreEcrireAscendantsGVRec(tArbre Arbre, int Identifiant, FILE *fichier){
     pFiche pId = trouverIdArbre(Arbre,Identifiant);
-    if(!pId || !pId->Identite){
-        perror("aaah ascendant"); //mettre erreur
+    if(!pId){
+        fprintf(stderr,"%s : identitifiant %d non trouvé",ERREUR,Identifiant);
         return ;
     }
-    if (pId->Identite->Sexe == 'M'){
+    
+    if (IdentiteSexe(pId->Identite) == 'M'){
         fprintf(fichier,"\n\tnode [color=blue];\n\t%d [label=\"%s\\n%s\\n%s\"];\n",
-        pId->Identite->Identifiant,
-        pId->Identite->Nom,
-        pId->Identite->Prenom,
-        pId->Identite->DateNaissance);
+        IdentiteIdentifiant(pId->Identite),
+        IdentiteNom(pId->Identite),
+        IdentitePrenom(pId->Identite),
+        IdentiteDateNaissance(pId->Identite));
     }
     else{
         fprintf(fichier,"\n\tnode [color=green];\n\t%d [label=\"%s\\n%s\\n%s\"];\n",
-        pId->Identite->Identifiant,
-        pId->Identite->Nom,
-        pId->Identite->Prenom,
-        pId->Identite->DateNaissance);
+        IdentiteIdentifiant(pId->Identite),
+        IdentiteNom(pId->Identite),
+        IdentitePrenom(pId->Identite),
+        IdentiteDateNaissance(pId->Identite));
     }
 
     if(pId->pPere){
         ArbreEcrireAscendantsGVRec(Arbre,pId->pPere->Identite->Identifiant,fichier);
-        fprintf(fichier,"\t%d -> %d;\n", pId->pPere->Identite->Identifiant,pId->Identite->Identifiant);
+        fprintf(fichier,"\t%d -> %d;\n", pId->pPere->Identite->Identifiant,IdentiteIdentifiant(pId->Identite));
     }
     if(pId->pMere){
         ArbreEcrireAscendantsGVRec(Arbre,pId->pMere->Identite->Identifiant,fichier);
-        fprintf(fichier,"\t%d -> %d;\n", pId->pMere->Identite->Identifiant,pId->Identite->Identifiant);
+        fprintf(fichier,"\t%d -> %d;\n", pId->pMere->Identite->Identifiant,IdentiteIdentifiant(pId->Identite));
     }
 
 }
 
+//fonction de création d'une fiche
 static pFiche CreerFiche(tIdentite Identite, pFiche pPere, pFiche pMere, pFiche pSuivante){
-    pFiche id = malloc(sizeof(struct sFiche));
-    if(!id) return NULL;
-    id->Identite = Identite;
-    id->pPere = pPere;
-    id->pMere = pMere;
-    id->pSuivante = pSuivante;
-    return id;
+    pFiche fiche = malloc(sizeof(struct sFiche));
+    if(!fiche) return NULL;
+    fiche->Identite = Identite;
+    fiche->pPere = pPere;
+    fiche->pMere = pMere;
+    fiche->pSuivante = pSuivante;
+    return fiche;
 }
 
 
@@ -117,38 +123,37 @@ void ArbreAfficher(tArbre Arbre){
     }
 
     if(!Arbre->pPremiere || !Arbre->pDerniere){
-        fprintf(stderr,"%sERREUR%s : Pointeur invalide :\n\tArbre->pPremiere = %p \n\tArbre->pDerniere = %p\n",
-        ROUGE,
-        BLANC,
+        fprintf(stderr,"%s : Pointeur invalide :\n\tArbre->pPremiere = %p \n\tArbre->pDerniere = %p\n",
+        ERREUR,
         Arbre->pPremiere,
         Arbre->pDerniere);
         fflush(stderr);
         return ;
     }
     
-    pFiche id = Arbre->pPremiere;
+    pFiche fiche = Arbre->pPremiere;
 
-    while (id){
+    while (fiche){
         //affichage de l'identité
-        if(!id->Identite) printf("inconnu");
-        else IdentiteAfficher(id->Identite);
+        if(!fiche->Identite) printf("inconnu");
+        else IdentiteAfficher(fiche->Identite);
         
         //affichage du père
         printf("\n\tPère : ");
-        if(!(id->pPere) || !(id->pPere->Identite)) printf("inconnu");
-        else IdentiteAfficher(id->pPere->Identite);
+        if(!(fiche->pPere) || !(fiche->pPere->Identite)) printf("inconnu");
+        else IdentiteAfficher(fiche->pPere->Identite);
 
         //affichage de la mère
         printf("\n\tMère : ");
-        if(!(id->pMere) || !(id->pMere->Identite)) printf("inconnu");
-        else IdentiteAfficher(id->pMere->Identite);
+        if(!(fiche->pMere) || !(fiche->pMere->Identite)) printf("inconnu");
+        else IdentiteAfficher(fiche->pMere->Identite);
         printf("\n");
 
-        if(id == id->pSuivante){
-            fprintf(stderr,"%sERREUR%s : l'identité pointe vers elle même",ROUGE,BLANC);
+        if(fiche == fiche->pSuivante){
+            fprintf(stderr,"%s : l'identité pointe vers elle même",ERREUR);
             return ;}
 
-        id = id->pSuivante;
+        fiche = fiche->pSuivante;
         fflush(stdout);
     }
 }
@@ -156,43 +161,44 @@ void ArbreAfficher(tArbre Arbre){
 void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite){
     
     if(!Identite){
-        fprintf(stderr,"%sERREUR%s : Identite = NULL",ROUGE,BLANC);
+        fprintf(stderr,"%s : Identite = NULL",ERREUR);
         return ;
     }
     
-    pFiche pId = calloc(1,sizeof(struct sFiche));
+    pFiche fiche = calloc(1,sizeof(struct sFiche));
 
-    if(!pId){
-        fprintf(stderr,"%sERREUR%s : echec dans l'allouage de struct sFiche* pId !",ROUGE,BLANC);
+    if(!fiche){
+        fprintf(stderr,"%s : echec dans l'allouage de struct sFiche* pId !",ERREUR);
         return ;
     }
-    pId->Identite = Identite;
+    fiche->Identite = Identite;
 
     if(!Arbre->pPremiere){
-        Arbre->pPremiere = pId;
-        Arbre->pDerniere = pId;
+        Arbre->pPremiere = fiche;
+        Arbre->pDerniere = fiche;
     }
     else{
-        Arbre->pDerniere->pSuivante = pId;
-        Arbre->pDerniere = pId;
+        Arbre->pDerniere->pSuivante = fiche;
+        Arbre->pDerniere = fiche;
     }
 }
 
 void ArbreLiberer(tArbre Arbre){
-    pFiche id = Arbre->pPremiere;
+    pFiche fiche = Arbre->pPremiere;
 
-    if(!(id->pSuivante)){
-        printf("AZAAAAAAAAH§!!!"); //remplacer par erreur 
-        free(id);
-        return ;
-        }
+//pas d'erreur ?
+    // if(!(fiche->pSuivante)){
+    //     printf("AZAAAAAAAAH§!!!"); //remplacer par erreur 
+    //     free(fiche);
+    //     return ;
+    //     }
 
-    while (id){
-        pFiche idSuivant = id->pSuivante;
-        IdentiteLiberer(id->Identite);
-        free(id->Identite);
-        free(id);
-        id = idSuivant;    
+    while (fiche){
+        pFiche ficheSuivante = fiche->pSuivante;
+        IdentiteLiberer(fiche->Identite);
+        free(fiche->Identite);
+        free(fiche);
+        fiche = ficheSuivante;    
     }
     free(Arbre);
     
@@ -202,16 +208,15 @@ tArbre ArbreLirePersonnesFichier(char Fichier[]){
     FILE *fichier = fopen(Fichier,"rt");
     if(!fichier) return NULL;
     tArbre abr = ArbreCreer();
-    tIdentite id = IdentiteLiref(fichier);
-    abr->pPremiere = CreerFiche(id,NULL,NULL,NULL);
+    tIdentite iden = IdentiteLiref(fichier);
+    abr->pPremiere = CreerFiche(iden,NULL,NULL,NULL);
     abr->pDerniere = abr->pPremiere;
-    id = IdentiteLiref(fichier);
+    iden = IdentiteLiref(fichier);
     
-    while (id!=NULL){
-        // abr->pPremiere = CreerFiche(id,NULL,NULL,abr->pPremiere);
-        abr->pDerniere->pSuivante = CreerFiche(id,NULL,NULL,NULL);
+    while (iden){
+        abr->pDerniere->pSuivante = CreerFiche(iden,NULL,NULL,NULL);
         abr->pDerniere = abr->pDerniere->pSuivante;
-        id = IdentiteLiref(fichier);
+        iden = IdentiteLiref(fichier);
     }
     fclose(fichier);
     return abr;
@@ -222,8 +227,8 @@ void ArbreAjouterLienParente(tArbre Arbre, int IdEnfant, int IdParent, char Pare
     pFiche pParent = trouverIdArbre(Arbre,IdParent);
 
     if(!pEnfant || !pParent){
-        printf("%sERROR:%s id enfant ou id parent non trouvé : \npEnfant =%p \npParent =%p\n",
-        ROUGE,BLANC,pEnfant,pParent);
+        printf("%s : id enfant ou id parent non trouvé : \npEnfant =%p \npParent =%p\n",
+        ERREUR,pEnfant,pParent);
         return;
     }
 
@@ -232,7 +237,7 @@ void ArbreAjouterLienParente(tArbre Arbre, int IdEnfant, int IdParent, char Pare
     else if (Parente == 'P')
         pEnfant->pPere = pParent;
     else
-        printf("%sERROR:%s lien de parente inconnus : %c\n",ROUGE,BLANC,Parente);
+        printf("%s : lien de parente inconnus : %c\n",ERREUR,Parente);
 }
 
 int ArbreLireLienParentef(FILE *f, int *pIdEnfant, int *pIdParent, char *pParente){
@@ -242,7 +247,7 @@ int ArbreLireLienParentef(FILE *f, int *pIdEnfant, int *pIdParent, char *pParent
 tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){ //à modifié pour copier arbre et revoyer arbre 
     FILE *f = fopen(Fichier,"rt");
     if(!f){
-        perror("AAAh");// insérer erreur
+        fprintf(stderr,"%s : échec de l'ouverture de %s",ERREUR,Fichier);
         return NULL;}
     long int pos = ftell(f);
     while (!feof(f)){
@@ -273,10 +278,10 @@ tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){ //à modifié 
 void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
     FILE *f = fopen(Fichier,"wt");
     if(!f){
-        perror("AAAAAAH!:!!!!");//mettre erreur !
+        fprintf(stderr,"%s : échec de l'ouverture de %s",ERREUR,Fichier);
         return;
     }
-
+    //allocation de diférentes char[] pour pouvoir stocké l'écriture du fichier
     char *homme = calloc(sizeof(char),77);
     char *femme = calloc(sizeof(char),27 );
     char *lien  = calloc(sizeof(char),24 );
@@ -295,13 +300,13 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
             perror("AAAAAh!");
             return ;
         }
-
+        
         char buffer[100];
         sprintf(buffer,"\t%d [label=\"%s\\n%s\\n%s\"]\n",
-        id->Identite->Identifiant,
-        id->Identite->Nom,
-        id->Identite->Prenom,
-        id->Identite->DateNaissance);
+        IdentiteIdentifiant(id->Identite),
+        IdentiteNom(id->Identite),
+        IdentitePrenom(id->Identite),
+        IdentiteDateNaissance(id->Identite));
             
         if(id->Identite->Sexe=='M')
             ajoutString(&homme,buffer);
@@ -311,19 +316,17 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
         if(id->pMere){
             char buffer[50];
             sprintf(buffer,"\t%d -> %d;\n",
-            id->pMere->Identite->Identifiant,
-            id->Identite->Identifiant);
+            IdentiteIdentifiant(id->pMere->Identite),
+            IdentiteIdentifiant(id->Identite));
             ajoutString(&lien,buffer);
         }
         if(id->pPere){
             char buffer[50];
             sprintf(buffer,"\t%d -> %d;\n",
-            id->pPere->Identite->Identifiant,
-            id->Identite->Identifiant);
+            IdentiteIdentifiant(id->pPere->Identite),
+            IdentiteIdentifiant(id->Identite));
             ajoutString(&lien,buffer);
         }
-
-        
 
         id = id->pSuivante;
     }
@@ -349,7 +352,7 @@ void ArbreAfficherAscendants(tArbre Arbre, int Identifiant){
 void ArbreEcrireAscendantsGV(tArbre Arbre, int Identifiant, char Fichier[]){
     FILE *f = fopen(Fichier,"wt");
     if(!f){
-        perror("AAAAAAH!:!!!!");//mettre erreur !
+        fprintf(stderr,"%s : échec de l'ouverture de %s",ERREUR,Fichier);
         return;
     }
     fprintf(f,"digraph {\n\trankdir = \" BT \" ;\n\nnode [shape=box,fontname=\"Arial\",fontsize =10];\n\nedge [dir=none];\n");
