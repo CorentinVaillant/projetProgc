@@ -14,8 +14,8 @@ void test(void){
     printf("--->OK<---\n");
     //test fichiers
     printf("Test fonction fichier :\n");
-    tArbre abr2 = ArbreLirePersonnesFichier("./arbres/arbre10.par");
-    ArbreLireLienParenteFichier(abr2,"./arbres/arbre10.ind");
+    tArbre abr2 = ArbreLirePersonnesFichier("./arbres/arbre10.ind");
+    ArbreLireLienParenteFichier(abr2,"./arbres/arbre10.par");
     ArbreAfficher(abr2);
     printf("--->OK<---\n");
     //test niveau 3
@@ -31,6 +31,5 @@ void test(void){
 
 int main(int argc, char **argv){
     test();
-    //segfault quand erreur, à réglé
     return 0;
 }

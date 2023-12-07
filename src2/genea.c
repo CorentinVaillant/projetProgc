@@ -62,7 +62,7 @@ static void ArbreAfficherAscendantsRec(tArbre Arbre, int Identifiant,unsigned in
 
 static void ArbreEcrireAscendantsGVRec(tArbre Arbre, int Identifiant, FILE *fichier){
     pFiche pId = trouverIdArbre(Arbre,Identifiant);
-    if(!pId){
+    if(!pId || !pId->Identite){
         perror("aaah ascendant"); //mettre erreur
         return ;
     }
@@ -181,7 +181,11 @@ void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite){
 void ArbreLiberer(tArbre Arbre){
     pFiche id = Arbre->pPremiere;
 
-    if(!(id->pSuivante))printf("AZAAAAAAAAH§!!!"); //remplacer par erreur 
+    if(!(id->pSuivante)){
+        printf("AZAAAAAAAAH§!!!"); //remplacer par erreur 
+        free(id);
+        return ;
+        }
 
     while (id){
         pFiche idSuivant = id->pSuivante;
