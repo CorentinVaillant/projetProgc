@@ -112,18 +112,18 @@ static pFiche CreerFiche(tIdentite Identite, pFiche pPere, pFiche pMere, pFiche 
 
 //publiques
 tArbre ArbreCreer(void){
-    return calloc(sizeof(struct sArbre),1);
+    return calloc(sizeof(struct sArbre),1); //créer un arbre vide initialiser à 0
 }
 
 void ArbreAfficher(tArbre Arbre){
-
-    if(!Arbre){
-        perror("arbres -> NULL\n");
+    //vérifie que Arbre n'est pas NULL, affiche une erreur si oui
+    if(!Arbre){ 
+        fprintf(stderr,"%s : arbre NULL !",ERREUR);
         return ;
     }
-
+    //vérifie que pPremiere et pDerniere ne pointent pas vers NULL, affiche erreur si oui
     if(!Arbre->pPremiere || !Arbre->pDerniere){
-        fprintf(stderr,"%s : Pointeur invalide :\n\tArbre->pPremiere = %p \n\tArbre->pDerniere = %p\n",
+        fprintf(stderr,"%s : Pointeur NULL :\n\tArbre->pPremiere = %p \n\tArbre->pDerniere = %p\n",
         ERREUR,
         Arbre->pPremiere,
         Arbre->pDerniere);
@@ -133,6 +133,7 @@ void ArbreAfficher(tArbre Arbre){
     
     pFiche fiche = Arbre->pPremiere;
 
+    //tant que fiche != NULL
     while (fiche){
         //affichage de l'identité
         if(!fiche->Identite) printf("inconnu");
@@ -149,34 +150,37 @@ void ArbreAfficher(tArbre Arbre){
         else IdentiteAfficher(fiche->pMere->Identite);
         printf("\n");
 
+        //vérifie que la fiche ne s'autoréférence pas en fiche suivantre, pour éviter une boucle infinie
         if(fiche == fiche->pSuivante){
             fprintf(stderr,"%s : l'identité pointe vers elle même",ERREUR);
             return ;}
 
+        //passe à la fiche suivante
         fiche = fiche->pSuivante;
         fflush(stdout);
     }
 }
 
 void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite){
-    
-    if(!Identite){
-        fprintf(stderr,"%s : Identite = NULL",ERREUR);
+    //vérifie que Identite ou Arbre ne sont pas NULL
+    if(!Identite || !Arbre){
+        fprintf(stderr,"%s : Identite ou Arbre NULL \nIdentite :%p \nArbre :%p",ERREUR,Identite,Arbre);
         return ;
     }
     
     pFiche fiche = calloc(1,sizeof(struct sFiche));
-
+    //test de la réussite du calloc, affiche une erreur et retourne si non
     if(!fiche){
         fprintf(stderr,"%s : echec dans l'allouage de struct sFiche* pId !",ERREUR);
         return ;
     }
     fiche->Identite = Identite;
-
+    //si l'abre est vide, mes l'identite en première et dernière fiche
     if(!Arbre->pPremiere){
         Arbre->pPremiere = fiche;
         Arbre->pDerniere = fiche;
     }
+    //sinon mes l'identite en dernière position de l'arbre
     else{
         Arbre->pDerniere->pSuivante = fiche;
         Arbre->pDerniere = fiche;
@@ -185,14 +189,7 @@ void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite){
 
 void ArbreLiberer(tArbre Arbre){
     pFiche fiche = Arbre->pPremiere;
-
-//pas d'erreur ?
-    // if(!(fiche->pSuivante)){
-    //     printf("AZAAAAAAAAH§!!!"); //remplacer par erreur 
-    //     free(fiche);
-    //     return ;
-    //     }
-
+    //libère toute les fiche tant qu'il y en a
     while (fiche){
         pFiche ficheSuivante = fiche->pSuivante;
         IdentiteLiberer(fiche->Identite);
@@ -206,32 +203,33 @@ void ArbreLiberer(tArbre Arbre){
 
 tArbre ArbreLirePersonnesFichier(char Fichier[]){
     FILE *fichier = fopen(Fichier,"rt");
-    if(!fichier) return NULL;
+    if(!fichier) //test de la réussite de l'ouverture du fichier
+        return NULL; 
     tArbre abr = ArbreCreer();
-    tIdentite iden = IdentiteLiref(fichier);
-    abr->pPremiere = CreerFiche(iden,NULL,NULL,NULL);
+    tIdentite identite = IdentiteLiref(fichier);
+    abr->pPremiere = CreerFiche(identite,NULL,NULL,NULL);
     abr->pDerniere = abr->pPremiere;
-    iden = IdentiteLiref(fichier);
-    
-    while (iden){
-        abr->pDerniere->pSuivante = CreerFiche(iden,NULL,NULL,NULL);
+    identite = IdentiteLiref(fichier);
+    //tant qu'il y a une identetie à lire
+    while (identite){
+        abr->pDerniere->pSuivante = CreerFiche(identite,NULL,NULL,NULL);
         abr->pDerniere = abr->pDerniere->pSuivante;
-        iden = IdentiteLiref(fichier);
+        identite = IdentiteLiref(fichier);
     }
     fclose(fichier);
     return abr;
 }
 
 void ArbreAjouterLienParente(tArbre Arbre, int IdEnfant, int IdParent, char Parente){
-    pFiche pEnfant = trouverIdArbre(Arbre,IdEnfant);
-    pFiche pParent = trouverIdArbre(Arbre,IdParent);
+    pFiche pEnfant = trouverIdArbre(Arbre,IdEnfant); //trouve l'enfant
+    pFiche pParent = trouverIdArbre(Arbre,IdParent); //trouve le parent
 
-    if(!pEnfant || !pParent){
+    if(!pEnfant || !pParent){ //vérifie si il existent, sinon affiche une erreur et retourne
         printf("%s : id enfant ou id parent non trouvé : \npEnfant =%p \npParent =%p\n",
         ERREUR,pEnfant,pParent);
         return;
     }
-
+    //assigne mère ou père selon Parente
     if (Parente == 'M')
         pEnfant->pMere = pParent;
     else if (Parente == 'P')
@@ -241,16 +239,16 @@ void ArbreAjouterLienParente(tArbre Arbre, int IdEnfant, int IdParent, char Pare
 }
 
 int ArbreLireLienParentef(FILE *f, int *pIdEnfant, int *pIdParent, char *pParente){
-    return fscanf(f,"%d %d %c",pIdEnfant,pIdParent,pParente);
+    return fscanf(f,"%d %d %c",pIdEnfant,pIdParent,pParente); //retourne la réussite du fscanf
 }
 
-tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){ //à modifié pour copier arbre et revoyer arbre 
+tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){
     FILE *f = fopen(Fichier,"rt");
-    if(!f){
+    if(!f){ //vérification de la réussite de l'ouverture du fichier, affiche une erreur et renvoie NULL sinon
         fprintf(stderr,"%s : échec de l'ouverture de %s",ERREUR,Fichier);
         return NULL;}
-    long int pos = ftell(f);
-    while (!feof(f)){
+    long int pos = ftell(f); //position dans le fichier
+    while (!feof(f)){ //tant que la fin n'est pas atteinte
         //passe tout les '\n'
         while (fgetc(f) == (int)'\n') ;
         fseek(f,-1,SEEK_CUR);
@@ -260,11 +258,12 @@ tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){ //à modifié 
         ArbreLireLienParentef(f,&idEnfant,&idParent,&parente);
         ArbreAjouterLienParente(Arbre,idEnfant,idParent,parente);
         
+        //passe tout les '\n' et ' '
         while (fgetc(f) == (int)' ') ;
-        //passe tout les '\n'
         while (fgetc(f) == (int)'\n') ;
         fseek(f,-1,SEEK_CUR);
 
+        //si la position n'avance plus
         if (pos == ftell(f))
             return Arbre;
     
@@ -277,7 +276,7 @@ tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){ //à modifié 
 
 void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
     FILE *f = fopen(Fichier,"wt");
-    if(!f){
+    if(!f){ //vérification de la réussite de l'ouverture du fichier, affiche une erreur et retourne sinon
         fprintf(stderr,"%s : échec de l'ouverture de %s",ERREUR,Fichier);
         return;
     }
@@ -290,17 +289,17 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
     sprintf(lien ,"\n\tedge [ dir = none ];\n");
 
     pFiche id = Arbre->pPremiere;
-    while (id){
+    while (id){ //tant que id!=NULL
 
         if(!id->Identite){
             fclose(f);
             free(homme);
             free(femme);
             free(lien);
-            perror("AAAAAh!");
+            fprintf(stderr,"%s : la variable *pFiche(%p) pointe vers NULL", ERREUR,id);
             return ;
         }
-        
+        //variable temporaire pour contenir les caractères stockées dans le fichier
         char buffer[100];
         sprintf(buffer,"\t%d [label=\"%s\\n%s\\n%s\"]\n",
         IdentiteIdentifiant(id->Identite),
@@ -331,13 +330,14 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
         id = id->pSuivante;
     }
 
-
+    //écriture dans le fichier
     fprintf(f,"digraph {\n\trankdir = \" BT \" ;");
     fprintf(f,"%s",homme);
     fprintf(f,"%s",femme);
     fprintf(f,"%s",lien);
     fprintf(f,"}");
     fclose(f);
+    //libération des variables
     free(homme);
     free(femme);
     free(lien);
@@ -346,17 +346,20 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
 
 
 void ArbreAfficherAscendants(tArbre Arbre, int Identifiant){
-    ArbreAfficherAscendantsRec(Arbre,Identifiant,0);
+    ArbreAfficherAscendantsRec(Arbre,Identifiant,0); //appel de la fonction récursive
 }
 
 void ArbreEcrireAscendantsGV(tArbre Arbre, int Identifiant, char Fichier[]){
     FILE *f = fopen(Fichier,"wt");
-    if(!f){
+    if(!f){ //vérification de la réussite de l'ouverture du fichier, affiche une erreur et retourne si non 
         fprintf(stderr,"%s : échec de l'ouverture de %s",ERREUR,Fichier);
         return;
     }
+    //écrit le début du fichier dans le fichier
     fprintf(f,"digraph {\n\trankdir = \" BT \" ;\n\nnode [shape=box,fontname=\"Arial\",fontsize =10];\n\nedge [dir=none];\n");
+    //appel de la fonction récursive pour pouvoir écrire dans le fichier
     ArbreEcrireAscendantsGVRec(Arbre,Identifiant,f);
+    //écrit la fin du fichier
     fprintf(f,"}");
     fclose(f);
 }
