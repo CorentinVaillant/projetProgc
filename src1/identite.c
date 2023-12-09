@@ -6,6 +6,18 @@
 #define ERREUR "\x1b[31mERREUR\x1b[0m"
 #define FINSTR '\0'
 
+//struture
+
+// Identité d'une personne
+struct sIdentite{
+    int Identifiant ; // Identifiant unique
+    char *Nom; // Nom (chaîne de caractères allouée dynamiquement)
+    char *Prenom; // Prénom (chaîne de caractères allouée dynamiquement)
+    char Sexe; // ’F ’ ou ’M ’
+    char DateNaissance [LG_DATE +1]; // Date de naissance sous la forme jj/mm/aaaa
+};
+
+
 //prive
 static unsigned int LongueurString(char String[]){
     char cara = String[0];

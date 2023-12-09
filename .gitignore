@@ -1,6 +1,7 @@
 ./compil
 *.o
 ./.vscode/*
+*.json
 *.out
 *.pdf
 *.dot

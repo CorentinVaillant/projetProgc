@@ -3,6 +3,22 @@
 
 #define ERREUR "\x1b[31mERREUR\x1b[0m"
 
+//structures
+// Arbre généalogique
+struct sArbre{
+    struct sFiche * pPremiere ; // Adresse de la première fiche
+    struct sFiche * pDerniere ; // Adresse de la dernière fiche
+};
+
+// Fiche associée à chaque individu présent dans l’arbre
+struct sFiche{
+    tIdentite Identite ; // Accès aux informations de l’identité de la personne
+    struct sFiche * pPere ; // Adresse de la fiche du père
+    struct sFiche * pMere ; // Adresse de la fiche de la mère
+    struct sFiche * pSuivante ; // Adresse de la fiche suivante
+};
+
+
 //prives
 
 // trouve une fiche dans un arbre à partir de l'identifiant de la variable tIdentite des struct sFiches, et renvoie le pointeur de la fiche
@@ -19,6 +35,7 @@ static pFiche trouverIdArbre(tArbre abr,int id){
 
 //renvoie la longeur d'une String
 static unsigned int LongueurString(char String[]){
+    if(!String) return 0;
     char cara = String[0];
     int longueur=0;
     while (cara!='\0'){
@@ -31,6 +48,7 @@ static unsigned int LongueurString(char String[]){
 //ajoute à la fin d'une variable string une autre, et réallou la mémoire pour pouvoire faire cela
 static int ajoutString(char **pString, char *ajout) {
     unsigned int nbChar = LongueurString(*pString) + LongueurString(ajout);
+    if (nbChar == 0) return 0;
     *pString = realloc(*pString, (nbChar + 1) * sizeof(char));
     if (!*pString) {
         fprintf(stderr,"%s :pString pointe vers NULL !\n",ERREUR);
@@ -87,12 +105,13 @@ static void ArbreEcrireAscendantsGVRec(tArbre Arbre, int Identifiant, FILE *fich
     }
 
     if(pId->pPere){
-        ArbreEcrireAscendantsGVRec(Arbre,pId->pPere->Identite->Identifiant,fichier);
-        fprintf(fichier,"\t%d -> %d;\n", pId->pPere->Identite->Identifiant,IdentiteIdentifiant(pId->Identite));
+        ;
+        ArbreEcrireAscendantsGVRec(Arbre,IdentiteIdentifiant(pId->pPere->Identite),fichier);
+        fprintf(fichier,"\t%d -> %d;\n", IdentiteIdentifiant(pId->pPere->Identite),IdentiteIdentifiant(pId->Identite));
     }
     if(pId->pMere){
-        ArbreEcrireAscendantsGVRec(Arbre,pId->pMere->Identite->Identifiant,fichier);
-        fprintf(fichier,"\t%d -> %d;\n", pId->pMere->Identite->Identifiant,IdentiteIdentifiant(pId->Identite));
+        ArbreEcrireAscendantsGVRec(Arbre,IdentiteIdentifiant(pId->pMere->Identite),fichier);
+        fprintf(fichier,"\t%d -> %d;\n", IdentiteIdentifiant(pId->pMere->Identite),IdentiteIdentifiant(pId->Identite));
     }
 
 }
@@ -313,8 +332,9 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
         IdentiteNom(id->Identite),
         IdentitePrenom(id->Identite),
         IdentiteDateNaissance(id->Identite));
-            
-        if(id->Identite->Sexe=='M')
+
+        
+        if(IdentiteSexe(id->Identite)=='M')
             ajoutString(&homme,buffer);
         else
             ajoutString(&femme,buffer);
