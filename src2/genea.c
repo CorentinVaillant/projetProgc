@@ -198,7 +198,6 @@ void ArbreLiberer(tArbre Arbre){
     while (fiche){
         pFiche ficheSuivante = fiche->pSuivante;
         IdentiteLiberer(fiche->Identite);
-        free(fiche->Identite);
         free(fiche);
         fiche = ficheSuivante;    
     }

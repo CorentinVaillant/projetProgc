@@ -54,7 +54,6 @@ tIdentite IdentiteCreer(int Id, char *Nom, char *Prenom, char Sexe, char DateNai
     nouvIdentite->Prenom=pPrenom;
     if (Sexe != 'M' && Sexe != 'F'){ //vérification du sexe
         IdentiteLiberer(nouvIdentite);
-        free(nouvIdentite);
         return NULL;
     }
     nouvIdentite->Sexe=Sexe;
@@ -94,6 +93,7 @@ void IdentiteAfficher(tIdentite Identite){
 void IdentiteLiberer(tIdentite Identite){
     free(Identite->Nom);
     free(Identite->Prenom);
+    free(Identite);
 }
 
 //lis le contenue d'un fichier pour les associe avec une variable tIdentite

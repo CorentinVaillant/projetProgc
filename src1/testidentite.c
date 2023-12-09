@@ -15,7 +15,6 @@ void testIdfile(char Str[]){
     IdentiteAfficher(IdTest);
     printf("\n");
     IdentiteLiberer(IdTest);
-    free(IdTest);
     fclose(f);
 }
 
@@ -26,7 +25,6 @@ int main(void){
 
     //test de libération de la variable
     IdentiteLiberer(IdTest);
-    free(IdTest);
 
     //test de lecture de fichier
     printf("test personne normal :\n");
