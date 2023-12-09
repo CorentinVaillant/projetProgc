@@ -1,7 +1,7 @@
 # Compileur
 CC = gcc
 # Flags compileur 
-CCFLAGS = -Wall -g -fsanitize=address 
+CCFLAGS = -Wall -g
 # Debogueur
 DEBOGUEUR = gdb
 
@@ -24,7 +24,7 @@ all: $(EXECUTABLE)
 
 
 valgrind: $(EXECUTABLE)
-	valgrind $(EXECUTABLE)
+	valgrind --leak-check=full --show-leak-kinds=all $(EXECUTABLE)
 
 
 run : $(EXECUTABLE)

@@ -28,7 +28,7 @@ all: $(EXECUTABLE)
 
 
 valgrind: $(EXECUTABLE)
-	valgrind -s --leak-check=full $(EXECUTABLE) $(ARG)
+	valgrind --leak-check=full --show-leak-kinds=all $(EXECUTABLE) $(ARG)
 
 
 run : $(EXECUTABLE)

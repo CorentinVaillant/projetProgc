@@ -33,7 +33,7 @@ static int ajoutString(char **pString, char *ajout) {
     unsigned int nbChar = LongueurString(*pString) + LongueurString(ajout);
     *pString = realloc(*pString, (nbChar + 1) * sizeof(char));
     if (!*pString) {
-        fprintf(stderr,"%s :pString pointe vers NULL !\n");
+        fprintf(stderr,"%s :pString pointe vers NULL !\n",ERREUR);
         return -1;
     }
     
@@ -168,6 +168,11 @@ void ArbreAjouterPersonne(tArbre Arbre, tIdentite Identite){
         return ;
     }
     
+    //si la personne est déjà dans l'arbre ne fais rien et renvoie l'arbre inchangé
+    if(trouverIdArbre(Arbre,IdentiteIdentifiant(Identite))){
+        return ;
+    }
+
     pFiche fiche = calloc(1,sizeof(struct sFiche));
     //test de la réussite du calloc, affiche une erreur et retourne si non
     if(!fiche){
@@ -264,11 +269,14 @@ tArbre ArbreLireLienParenteFichier(tArbre Arbre, char Fichier[]){
         fseek(f,-1,SEEK_CUR);
 
         //si la position n'avance plus
-        if (pos == ftell(f))
+        if (pos == ftell(f)){
+            fclose(f);
             return Arbre;
+        }
     
         pos = ftell(f);
     }
+    fclose(f);
     return Arbre;
 }
 

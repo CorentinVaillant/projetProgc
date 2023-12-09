@@ -36,5 +36,6 @@ int main(int argc, char **argv){
     sscanf(argv[3],"%d",&id);
     ArbreAfficherAscendants(abr,id);
     ArbreEcrireAscendantsGV(abr,id,argv[4]);
+    ArbreLiberer(abr);
     return 0;
 }

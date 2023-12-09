@@ -9,12 +9,14 @@ void testIdfile(char Str[]){
     IdTest = IdentiteLiref(f);
     if(!IdTest){
         printf("\x1b[31m IdTest NULL !\n\x1b[0m");
+        fclose(f);
         return ;
     }
     IdentiteAfficher(IdTest);
     printf("\n");
     IdentiteLiberer(IdTest);
     free(IdTest);
+    fclose(f);
 }
 
 int main(void){

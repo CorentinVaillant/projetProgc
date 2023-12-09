@@ -32,7 +32,7 @@ all: $(EXECUTABLE)
 
 
 valgrind: $(EXECUTABLE)
-	valgrind -s --track-origins=yes $(EXECUTABLE) $(ARG)
+	valgrind --leak-check=full --show-leak-kinds=all $(EXECUTABLE) $(ARG)
 
 
 run : $(EXECUTABLE)

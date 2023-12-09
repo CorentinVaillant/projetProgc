@@ -4,12 +4,13 @@
 
 #define LONGUEURMOTMAX 80
 #define ERREUR "\x1b[31mERREUR\x1b[0m"
+#define FINSTR '\0'
 
 //prive
 static unsigned int LongueurString(char String[]){
     char cara = String[0];
     int longueur=0;
-    while (cara!='\0'){
+    while (cara!=FINSTR){
         longueur++;
         cara = String[longueur];
     }
@@ -18,9 +19,9 @@ static unsigned int LongueurString(char String[]){
 //retire tout les espaces ou retours à la ligne présent après les caractères autres
 static void raccourcirStr(char Str[]){
     int i = 0;
-    while (Str[i] != ' ' && Str[i] != '\n' && Str[i] != '\0')
+    while (Str[i] != ' ' && Str[i] != '\n' && Str[i] != FINSTR)
         i++;
-    Str[i] = '\0';
+    Str[i] = FINSTR;
     
 }
 
@@ -52,6 +53,8 @@ tIdentite IdentiteCreer(int Id, char *Nom, char *Prenom, char Sexe, char DateNai
     nouvIdentite->Nom=pNom;
     nouvIdentite->Prenom=pPrenom;
     if (Sexe != 'M' && Sexe != 'F'){ //vérification du sexe
+        IdentiteLiberer(nouvIdentite);
+        free(nouvIdentite);
         return NULL;
     }
     nouvIdentite->Sexe=Sexe;
