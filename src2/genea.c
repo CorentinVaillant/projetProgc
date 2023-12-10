@@ -310,9 +310,9 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
     char *homme = calloc(sizeof(char),77);
     char *femme = calloc(sizeof(char),27 );
     char *lien  = calloc(sizeof(char),24 );
-    sprintf(homme,"\n\tnode [ shape = box , color = blue , fontname = \" Arial \" , fontsize =10];\n");
-    sprintf(femme,"\n\tnode [ color = green ];\n");
-    sprintf(lien ,"\n\tedge [ dir = none ];\n");
+    sprintf(homme,"\n\tnode [shape=box,color=blue,fontname=\"Arial\",fontsize =10];\n");
+    sprintf(femme,"\n\tnode [color=green];\n");
+    sprintf(lien ,"\n\tedge [dir=none];\n");
 
     pFiche id = Arbre->pPremiere;
     while (id){ //tant que id!=NULL
@@ -327,7 +327,7 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
         }
         //variable temporaire pour contenir les caractères stockées dans le fichier
         char buffer[100];
-        sprintf(buffer,"\t%d [label=\"%s\\n%s\\n%s\"]\n",
+        sprintf(buffer,"\t%d [label=\"%s\\n%s\\n%s\"];\n",
         IdentiteIdentifiant(id->Identite),
         IdentiteNom(id->Identite),
         IdentitePrenom(id->Identite),
@@ -338,7 +338,7 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
             ajoutString(&homme,buffer);
         else
             ajoutString(&femme,buffer);
-        
+//!      
         if(id->pMere){
             char buffer[50];
             sprintf(buffer,"\t%d -> %d;\n",
@@ -353,12 +353,12 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
             IdentiteIdentifiant(id->Identite));
             ajoutString(&lien,buffer);
         }
-
+//!
         id = id->pSuivante;
     }
 
     //écriture dans le fichier
-    fprintf(f,"digraph {\n\trankdir = \" BT \" ;");
+    fprintf(f,"digraph {\n\trankdir = \" BT \" ;\n");
     fprintf(f,"%s",homme);
     fprintf(f,"%s",femme);
     fprintf(f,"%s",lien);
@@ -370,7 +370,25 @@ void ArbreEcrireGV(tArbre Arbre, char Fichier[]){
     free(lien);
 
 }
-
+/*
+//Modifications à apportées pour obtenir le .dot souhaité :
+//!      
+        if(id->pPere){
+            char buffer[50];
+            sprintf(buffer,"\t%d -> %d;\n",
+            IdentiteIdentifiant(id->Identite),
+            IdentiteIdentifiant(id->pPere->Identite));
+            ajoutString(&lien,buffer);
+        }
+        if(id->pMere){
+            char buffer[50];
+            sprintf(buffer,"\t%d -> %d;\n",
+            IdentiteIdentifiant(id->Identite),
+            IdentiteIdentifiant(id->pMere->Identite),);
+            ajoutString(&lien,buffer);
+        }
+//!
+*/
 
 void ArbreAfficherAscendants(tArbre Arbre, int Identifiant){
     ArbreAfficherAscendantsRec(Arbre,Identifiant,0); //appel de la fonction récursive

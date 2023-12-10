@@ -14,7 +14,7 @@ FICHIERCOMPIL = compil
 # Fichiers compile
 SOURCES1 = identite.c
 SOURCES2 = genea.c
-SOURCES3 = visuarbre.c
+SOURCES3 = visuarbreasc.c
 
 #à modifié
 SOURCES = $(patsubst %.c,$(FICHIERSRC1)/%.c,identite.c) $(patsubst %.c,$(FICHIERSRC2)/%.c, genea.c) $(patsubst %.c,$(FICHIERSRC3)/%.c, visuarbre.c)
@@ -22,9 +22,9 @@ SOURCES = $(patsubst %.c,$(FICHIERSRC1)/%.c,identite.c) $(patsubst %.c,$(FICHIER
 # Fichier objet
 OBJECTS = $(patsubst %.c,$(FICHIERCOMPIL)/%.o,$(SOURCES1) $(SOURCES2) $(SOURCES3))
 # Nom executable
-EXECUTABLE = $(FICHIERCOMPIL)/visuarbre.out
+EXECUTABLE = $(FICHIERCOMPIL)/visuarbreasc.out
 #Arguments executables
-ARG = arbres/arbre10.ind arbres/arbre10.par arbre10.dot
+ARG = arbres/arbre10.ind arbres/arbre10.par 4 arbreas10.dot
 
 
 

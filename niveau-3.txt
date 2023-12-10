@@ -1,0 +1,2 @@
+le pdf obtenue est une symétrie axial de celui demandé, car en produisant le .dot exact de l'exemple de la fonction void ArbreAfficherAscendants(tArbre Arbre, int Identifiant) le graphe est inverser par une symétrie axial, 
+et se lie de bas en haut au lieu de haut en bas, les lien sont donc inverser pour pouvoir lui donner un sens de lisibilité cohérent.
